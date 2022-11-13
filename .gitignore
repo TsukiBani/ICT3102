@@ -1,0 +1,11 @@
+ICT3102/mysql_data/
+ICT3102/__pycache__/
+ICT3102/website/__pycache__/
+ICT3102/yarnlock/
+ICT3102/node_modules/.yarn-integrity
+ICT3102/yarn.lock
+*.pyc
+ICT3102/website/__pycache__/*
+ICT3102/website/__pycache__/__init__.cpython-310.pyc
+ICT3102/website/__pycache__/views.cpython-310.pyc
+ICT3102/website/__pycache__/__init__.cpython-310.pyc

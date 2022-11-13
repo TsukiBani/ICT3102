@@ -1,5 +1,6 @@
 services:
   app:
+    # image: jaspzx/3102:latest
     build: .
     links:
       - db
@@ -7,14 +8,16 @@ services:
       - "5000:5000"
   db:
     image: mysql:5.7
+    # image: jaspzx/3102db:latest
     ports:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
       # MYSQL_DATABASE: 02db
     volumes:
-      - ./db:/docker-entrypoint-initdb.d/:ro
-      # - ./db:/docker-entrypoint-initdb.d/init.sql
+      # - ./db:/docker-entrypoint-initdb.d/:ro
+      # - ./db:/var/lib/mysql:rw
+      - ./db:/docker-entrypoint-initdb.d/:rw
 
 
   # ==============================================

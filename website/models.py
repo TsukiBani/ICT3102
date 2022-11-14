@@ -28,6 +28,15 @@ def test_table() -> List[Dict]:
 
 
 class ImageSQL:
+    """
+        Be able to:
+        1) Return all images from Database
+        2) Check if ImageNameExists
+        3) Insert Image
+        4) Update URL
+        5) Update Caption
+        6) Delete Image
+    """
     Base = declarative_base()
 
     class Image(Base):
@@ -46,6 +55,7 @@ class ImageSQL:
     def get_all(self):
         """
         Returns Image Table in List Form
+        List of (ID, Name, URL, Caption)
         """
         result = self.session.query(self.Image.ID, self.Image.name, self.Image.image_url, self.Image.caption).all()
         return result
@@ -53,17 +63,36 @@ class ImageSQL:
     def doesImageNameExist(self, name):
         """
         Returns Count of Name
+        Used to check if name exists
         """
         result = self.session.query(self.Image.name).filter(self.Image.name == name).count()
         return result
 
+    def insertImage(self, name, image_url):
+        """
+        Insert Image, returns ID of image
+        """
+        self.session.add(self.Image(image_url=image_url, name=name))
+        self.session.commit()
+        result = self.session.query(self.Image.ID).filter(
+            self.Image.name == name).one()
+        return result
+
+    def getImageID(self, name):
+        """
+        No idea where this is used
+        """
+        result = self.session.query(self.Image.ID).filter(
+            self.Image.name == name).one()
+        return result
+
     def findById(self, ID):
         """
-        Prints Image ID
+        Returns Image Name, URL, Caption
         """
         result = self.session.query(self.Image.name, self.Image.image_url, self.Image.caption).filter(
             self.Image.ID == ID).one()
-        print(result)
+        return result
 
     def updateImageURL(self, ID, new_URL):
         try:
@@ -74,14 +103,68 @@ class ImageSQL:
         except Exception as e:
             print(e)
 
-    def delete_image(self, ID):
+    def deleteImageById(self, ID):
         statement = self.session.query(self.Image).filter(self.Image.ID == ID).delete()
         self.session.commit()
 
-    def insertNoCaption(self, image_url):
-        self.session.add(self.Image(image_url=image_url))
-        self.session.commit()
 
-    def insertWithCaption(self, image_url, caption):
-        self.session.add(self.Image(image_url=image_url, caption=caption))
-        self.session.commit()
+class QuestionAnsSQL:
+    Base = declarative_base()
+
+    class QuestionAnswer(Base):
+        __tablename__ = 'Image'
+        ID = db.Column(db.INTEGER, primary_key=True)
+        questionID = db.Column(db.INTEGER)
+        question = db.Column(db.VARCHAR(255))
+        answer = db.Column(db.VARCHAR(255))
+
+    def __init__(self, username, password, ip, port, database_name):
+        inner_engine = db.create_engine(
+            "mysql+pymysql://%s:%s@%s:%s/%s" % (username, password, ip, port, database_name))
+        self.Session = sessionmaker(bind=inner_engine)
+        self.session = self.Session()
+
+    def getDataByID(self, ID):
+        """
+        Returns list of list? for matching ID
+        Format is (questionID, question, answer)
+        """
+        result = self.session.query(self.QuestionAnswer.questionID, self.QuestionAnswer.question,
+                                    self.QuestionAnswer.answer).filter(
+            self.QuestionAnswer.ID == ID).all()
+        return result
+
+    def updateQuestions(self, QuestionID, NewQuestion):
+        """
+        Search by QuestionID, Updates using NewQuestion
+        """
+        try:
+            statement = select(self.QuestionAnswer).where(self.QuestionAnswer.questionID == QuestionID)
+            retrievedImage = self.session.scalars(statement).one()
+            retrievedImage.question = NewQuestion
+            self.session.commit()
+        except Exception as e:
+            return e
+
+    def updateAnswers(self, QuestionID, NewAnswer):
+        """
+        Search by QuestionID, Updates using NewAnswer
+        """
+        try:
+            statement = select(self.QuestionAnswer).where(self.QuestionAnswer.questionID == QuestionID)
+            retrievedImage = self.session.scalars(statement).one()
+            retrievedImage.answer = NewAnswer
+            self.session.commit()
+        except Exception as e:
+            return e
+
+    def delete_QuestionAnswer(self, QuestionID):
+        """
+        Deletes by QuestionID
+        """
+        try:
+            statement = self.session.query(self.QuestionAnswer).filter(
+                self.QuestionAnswer.questionID == QuestionID).delete()
+            self.session.commit()
+        except Exception as e:
+            return e

@@ -5,15 +5,15 @@ CREATE TABLE Image
 (
     ID        INTEGER AUTO_INCREMENT,
     image_url VARCHAR(255),
-    Caption   VARCHAR(255),
+    caption   VARCHAR(255),
     PRIMARY KEY (ID)
 );
 
 CREATE TABLE QuestionAnswer
 (
     ID       INTEGER,
-    Question VARCHAR(255),
-    Answer   VARCHAR(255),
-    PRIMARY KEY (ID, Question),
+    question VARCHAR(255),
+    answer   VARCHAR(255),
+    PRIMARY KEY (ID, question),
     FOREIGN KEY (ID) REFERENCES Image (ID)
 );

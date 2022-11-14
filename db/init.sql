@@ -1,5 +1,7 @@
-CREATE  database 02db;
-USE     02db;
+CREATE
+database 02db;
+USE
+02db;
 
 CREATE TABLE Image
 (
@@ -12,9 +14,10 @@ CREATE TABLE Image
 
 CREATE TABLE QuestionAnswer
 (
-    ID       INTEGER,
-    question VARCHAR(255),
-    answer   VARCHAR(255),
-    PRIMARY KEY (ID, question),
+    ID         INTEGER,
+    questionID INTEGER AUTO_INCREMENT,
+    question   VARCHAR(255),
+    answer     VARCHAR(255),
+    PRIMARY KEY (ID, questionID),
     FOREIGN KEY (ID) REFERENCES Image (ID)
 );

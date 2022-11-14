@@ -33,41 +33,55 @@ class ImageSQL:
     class Image(Base):
         __tablename__ = 'Image'
         ID = db.Column(db.INTEGER, primary_key=True)
+        name = db.Column(db.VARCHAR(255))
         image_url = db.Column(db.VARCHAR(255))
         caption = db.Column(db.VARCHAR(255))
 
-    def __init__(self, username, password, ip, port, table_name):
+    def __init__(self, username, password, ip, port, database_name):
         inner_engine = db.create_engine(
-            "mysql+pymysql://%s:%s@%s:%s/%s" % (username, password, ip, port, table_name))
+            "mysql+pymysql://%s:%s@%s:%s/%s" % (username, password, ip, port, database_name))
         self.Session = sessionmaker(bind=inner_engine)
         self.session = self.Session()
 
     def get_all(self):
-        result = self.session.query(self.Image.ID, self.Image.image_url, self.Image.caption).all()
-        print(result)
+        """
+        Returns Image Table in List Form
+        """
+        result = self.session.query(self.Image.ID, self.Image.name, self.Image.image_url, self.Image.caption).all()
+        return result
 
-    def findById(self, ID):
-        result = self.session.query(self.Image.name, self.Image.image_url, self.Image.caption).filter(
-            self.Image.ID == ID).one()
-        print(result)
+        def doesImageNameExist(self, name):
+            """
+            Returns Count of Name
+            """
+            result = self.session.query(self.Image.name).filter(self.Image.name == name).count()
+            return result
 
-    def updateImageURL(self, ID, new_URL):
-        try:
-            statement = select(self.Image).where(self.Image.ID == ID)
-            retrievedImage = self.session.scalars(statement).one()
-            retrievedImage.image_url = new_URL
+        def findById(self, ID):
+            """
+            Prints Image ID
+            """
+            result = self.session.query(self.Image.name, self.Image.image_url, self.Image.caption).filter(
+                self.Image.ID == ID).one()
+            print(result)
+
+        def updateImageURL(self, ID, new_URL):
+            try:
+                statement = select(self.Image).where(self.Image.ID == ID)
+                retrievedImage = self.session.scalars(statement).one()
+                retrievedImage.image_url = new_URL
+                self.session.commit()
+            except Exception as e:
+                print(e)
+
+        def delete_image(self, ID):
+            statement = self.session.query(self.Image).filter(self.Image.ID == ID).delete()
             self.session.commit()
-        except Exception as e:
-            print(e)
 
-    def delete_image(self, ID):
-        statement = self.session.query(self.Image).filter(self.Image.ID == ID).delete()
-        self.session.commit()
+        def insertNoCaption(self, image_url):
+            self.session.add(self.Image(image_url=image_url))
+            self.session.commit()
 
-    def insertNoCaption(self, image_url):
-        self.session.add(self.Image(image_url=image_url))
-        self.session.commit()
-
-    def insertWithCaption(self, image_url, caption):
-        self.session.add(self.Image(image_url=image_url, caption=caption))
-        self.session.commit()
+        def insertWithCaption(self, image_url, caption):
+            self.session.add(self.Image(image_url=image_url, caption=caption))
+            self.session.commit()

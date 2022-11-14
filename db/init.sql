@@ -4,6 +4,7 @@ USE     02db;
 CREATE TABLE Image
 (
     ID        INTEGER AUTO_INCREMENT,
+    name      VARCHAR(255),
     image_url VARCHAR(255),
     caption   VARCHAR(255),
     PRIMARY KEY (ID)

@@ -1,29 +1,17 @@
-from flask import Blueprint, render_template, redirect, url_for, request
-
-from typing import List, Dict
-from flask import Flask
-import mysql.connector
 import json
 
+from flask import Blueprint, render_template, request
+from models import ImageSQL, test_table
+import pika
+
 views = Blueprint("views", __name__)
-
-
-def test_table() -> List[Dict]:
-    config = {
-        "user": "root",
-        "password": "root",
-        "host": "db",
-        "port": "3306",
-        "database": "02db",
-    }
-    connection = mysql.connector.connect(**config)
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM test_table")
-    results = [{name: color} for (name, color) in cursor]
-    cursor.close()
-    connection.close()
-
-    return results
+# TODO Do we need to provide users with a way to key in their database credentials?
+username = 'root'
+password = 'root'
+ip = 'localhost'
+port = '3306'
+table = 'Image'
+imageSQL = ImageSQL(username, password, ip, port, table)
 
 
 @views.route("/", methods=["GET", "POST"])

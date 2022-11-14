@@ -18,6 +18,6 @@ CREATE TABLE QuestionAnswer
     questionID INTEGER AUTO_INCREMENT,
     question   VARCHAR(255),
     answer     VARCHAR(255),
-    PRIMARY KEY (ID, questionID),
+    PRIMARY KEY (questionID),
     FOREIGN KEY (ID) REFERENCES Image (ID)
 );

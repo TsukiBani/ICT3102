@@ -1,13 +1,19 @@
-create database 02db;
-use 02db;
+CREATE  database 02db;
+USE     02db;
 
-CREATE TABLE test_table (
-  name VARCHAR(20),
-  color VARCHAR(10)
+CREATE TABLE Image
+(
+    ID        INTEGER AUTO_INCREMENT,
+    image_url VARCHAR(255),
+    Caption   VARCHAR(255),
+    PRIMARY KEY (ID)
 );
 
-INSERT INTO test_table
-  (name, color)
-VALUES
-  ('dev', 'blue'),
-  ('pro', 'yellow');
+CREATE TABLE QuestionAnswer
+(
+    ID       INTEGER,
+    Question VARCHAR(255),
+    Answer   VARCHAR(255),
+    PRIMARY KEY (ID, Question),
+    FOREIGN KEY (ID) REFERENCES Image (ID)
+);

@@ -11,3 +11,32 @@ field. The website would allow teachers to perform the following tasks:
     <li>Generate Questions and Answers</li>
     <li>Amend Generated QnA</li>
 </ol>
+
+## Directory Layout
+
+### Website > models.py
+
+Contains all SQL-related stuff. Main handler is the ImageSQL class
+<br>Tables are Listed Below
+<ol>
+    <li>Image</li>
+    <li>QuestionAnswer</li>
+</ol>
+
+### Website > views.py
+
+Contains all the Flask routes
+
+## RabbitMQ Implementation
+
+Queues Declared, No exchanges used
+<ol>
+    <li>CaptionGen</li>
+    <li>QuestGen</li>
+    <li>AnswerGen</li>
+</ol>
+
+## Requirements
+
+All requirements can be found within the requirements.txt
+RabbitMQ's Docker Image might need to be added to the docker-compose.yml

@@ -29,6 +29,7 @@ def home() -> str:
         nameOfImage = request.values.get('image_name')
         imageUrl = 'None'
         if imageSQL.doesImageNameExist(nameOfImage) == 1:
+            # TODO How to reject duplicates?
             return render_template("index.html")
         else:
             imageID = imageSQL.insertImage(name=nameOfImage, image_url=imageUrl)

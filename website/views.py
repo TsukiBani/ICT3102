@@ -1,6 +1,6 @@
 import json
 import pika
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from website.models import ImageSQL, test_table
 
 views = Blueprint("views", __name__)
@@ -26,22 +26,33 @@ channel.queue_declare(queue='AnswerGen', durable=True)  # Request for answer gen
 @views.route("/", methods=["GET", "POST"])
 def home() -> str:
     if request.method == "POST":
-        image = request.form["image_uploads"]
-        print(image)
+        nameOfImage = request.values.get('image_name')
+        imageUrl = 'None'
+        if imageSQL.doesImageNameExist(nameOfImage) == 1:
+            return render_template("index.html")
+        else:
+            imageID = imageSQL.insertImage(name=nameOfImage, image_url=imageUrl)
+            session['id'] = imageID[0]
+            return redirect(url_for('views.reviewimage'))
     return render_template("index.html")
-
-
-@views.route("/dbtest")
-def dbtest() -> str:
-    return json.dumps({"test_table": "null"})
 
 
 @views.route("/reviewimage", methods=["GET", "POST"])
 def reviewimage():
-    return render_template("reviewimage.html")
+    ID = session['id']
+    image = imageSQL.findById(ID)
+    if request.method == "POST":
+        return render_template("reviewimage.html")
+    # TODO Be able to update caption
+    # TODO Be able to update question
+    # TODO Be able to update answer
+    return render_template("reviewimage.html", img_name=image[0])
 
 
-@views.route("/searchimage")
+@views.route("/searchimage", methods=["GET", "POST"])
 def viewimage():
     results = imageSQL.get_all()
+    if request.method == "POST":
+        session['id'] = request.values.get('image')
+        return redirect(url_for('views.reviewimage'))
     return render_template("searchimage.html", results=results)

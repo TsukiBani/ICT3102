@@ -11,6 +11,7 @@ services:
   app:
     # image: jaspzx/3102:latest
     build: .
+    container_name: app
     depends_on:
       - db
       - rabbitmq
@@ -21,7 +22,9 @@ services:
       - "5000:5000"
     networks:
       - ict3102_default
+    command: ["./wait-for-it.sh","rabbitmq:5672","--","python","app.py"]
   db:
+    container_name: db
     hostname: db
     image: mysql:5.7
     # image: jaspzx/3102db:latest

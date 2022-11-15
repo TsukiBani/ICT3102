@@ -1,30 +1,8 @@
 # SQLAlchemy-related Imports
-from sqlalchemy import *
-from sqlalchemy.orm import sessionmaker
 import sqlalchemy as db
+from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
-
-# MySQL-related Imports
-from typing import List, Dict
-import mysql.connector
-
-
-def test_table() -> List[Dict]:
-    config = {
-        "user": "root",
-        "password": "root",
-        "host": "db",
-        "port": "3306",
-        "database": "02db",
-    }
-    connection = mysql.connector.connect(**config)
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM test_table")
-    results = [{name: color} for (name, color) in cursor]
-    cursor.close()
-    connection.close()
-
-    return results
+from sqlalchemy.orm import sessionmaker
 
 
 class ImageSQL:
@@ -106,7 +84,7 @@ class ImageSQL:
     def deleteImageById(self, ID):
         statement = self.session.query(self.Image).filter(self.Image.ID == ID).delete()
         self.session.commit()
-    
+
     def updatecaption(self, ID, newcaption):
         try:
             statement = select(self.Image).where(self.Image.ID == ID)
@@ -114,16 +92,16 @@ class ImageSQL:
             retrievedcaption.caption = newcaption
             self.session.commit()
         except Exception as e:
-            print(e)   
+            print(e)
 
 
 class QuestionAnsSQL:
     Base = declarative_base()
 
     class QuestionAnswer(Base):
-        __tablename__ = 'Image'
-        ID = db.Column(db.INTEGER, primary_key=True)
-        questionID = db.Column(db.INTEGER)
+        __tablename__ = 'QuestionAnswer'
+        ID = db.Column(db.INTEGER)
+        questionID = db.Column(db.INTEGER, primary_key=True, autoincrement=True)
         question = db.Column(db.VARCHAR(255))
         answer = db.Column(db.VARCHAR(255))
 
@@ -177,3 +155,14 @@ class QuestionAnsSQL:
             self.session.commit()
         except Exception as e:
             return e
+
+    def insertQuestion(self, ID, Question):
+        """
+    Insert Question, returns generated QuestionID
+        """
+        self.session.add(self.QuestionAnswer(ID=ID, question=Question, answer=""))
+        self.session.commit()
+        result = self.session.query(self.QuestionAnswer.questionID) \
+            .filter(self.QuestionAnswer.ID == ID, self.QuestionAnswer.question == Question) \
+            .one()
+        return result

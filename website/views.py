@@ -8,19 +8,19 @@ views = Blueprint("views", __name__)
 # TODO Do we need to provide users with a way to key in their database credentials?
 username = 'root'
 password = 'root'
-ip = 'localhost'
+ip = 'db'
 port = '3306'
 table = '02db'
 imageSQL = ImageSQL(username, password, ip, port, table)
 
-# connection = pika.BlockingConnection(
-#     pika.ConnectionParameters(host='localhost'))
-# channel = connection.channel()
+connection = pika.BlockingConnection(
+    pika.ConnectionParameters(host='rabbitmq'))
+channel = connection.channel()
 
-# # RabbitMQ Queue Declaration
-# channel.queue_declare(queue='CaptionGen', durable=True)  # Request for caption generation
-# channel.queue_declare(queue='QuestGen', durable=True)  # Request for question generation
-# channel.queue_declare(queue='AnswerGen', durable=True)  # Request for answer generation
+# RabbitMQ Queue Declaration
+channel.queue_declare(queue='CaptionGen', durable=True)  # Request for caption generation
+channel.queue_declare(queue='QuestGen', durable=True)  # Request for question generation
+channel.queue_declare(queue='AnswerGen', durable=True)  # Request for answer generation
 
 
 @views.route("/", methods=["GET", "POST"])

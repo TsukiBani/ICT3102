@@ -8,13 +8,13 @@ views = Blueprint("views", __name__)
 # TODO Do we need to provide users with a way to key in their database credentials?
 username = 'root'
 password = 'root'
-ip = 'localhost'
+ip = 'db'
 port = '3306'
 table = '02db'
 imageSQL = ImageSQL(username, password, ip, port, table)
 
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host='localhost'))
+    pika.ConnectionParameters(host='rabbitmq'))
 channel = connection.channel()
 
 # RabbitMQ Queue Declaration

@@ -1,11 +1,20 @@
 services:
+  rabbitmq:
+    container_name: rabbitmq
+    hostname: rabbitmq
+    image: rabbitmq:latest
+    ports:
+      - "5672:5672"
+      - "15762:15762"
+    networks:
+      - ict3102_default
   app:
     # image: jaspzx/3102:latest
     build: .
-    links:
+    depends_on:
       - db
       - rabbitmq
-    depends_on:
+    links:
       - db
       - rabbitmq
     ports:
@@ -13,6 +22,7 @@ services:
     networks:
       - ict3102_default
   db:
+    hostname: db
     image: mysql:5.7
     # image: jaspzx/3102db:latest
     ports:
@@ -26,12 +36,6 @@ services:
       - ./db:/docker-entrypoint-initdb.d/:rw
     networks:
       - ict3102_default
-  rabbitmq:
-    hostname: rabbitmq
-    image: rabbitmq
-    ports:  
-      - "5672:5672"
-      - "15672:15672"
 networks:
   ict3102_default:
     driver: bridge

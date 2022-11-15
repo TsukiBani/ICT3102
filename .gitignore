@@ -8,5 +8,7 @@ ICT3102/yarn.lock
 ICT3102/website/__pycache__/*
 ICT3102/website/__pycache__/__init__.cpython-310.pyc
 ICT3102/website/__pycache__/views.cpython-310.pyc
-ICT3102/website/__pycache__/__init__.cpython-310.pyc
 .idea
+*.pt
+__pycache__
+questGen/venv/*

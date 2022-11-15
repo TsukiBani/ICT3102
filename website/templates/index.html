@@ -1,4 +1,8 @@
 {% extends 'base.html' %} {% include 'header.html' %} {% block title %} Home {% endblock %} {% block body %}
+<link
+href="{{url_for('static',filename= 'css/index.css')}}"
+rel="stylesheet"
+/>
     <body>
     <h1>Insert Image</h1>
     {% with messages = get_flashed_messages() %} {% if messages %} {% for
@@ -19,8 +23,11 @@
             <br>
             <input type="file" id="image_uploads" name="image_uploads" accept=".jpg, .jpeg, .png">
         </div>
-        <label for="image_name">Image Name:</label><br>
+        <span for="image_name">Image Name:
         <input type="text" id="image_name" name="image_name" required>
+        </span>
+        <br>
+        <br>
         <div class="preview">
             <p>No files currently selected for upload</p>
         </div>

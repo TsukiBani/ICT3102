@@ -2,13 +2,15 @@
     <body>
     <h1>Review Image</h1>
     <h3>Image Name: {{ img_name }}</h3>
-    <form method="post">
-        <h2>Caption</h2>
-        <th>This is where the caption goes</th>
-        <th>
-            <a href="/" class="btn btn-danger btn-xs">Edit</a>
-        </th>
-    </form>
+    <h3>Caption: {{ img_caption }}</h3> <button class="btn btn-danger btn-xs" onclick="myFunction()">Edit</button>
+    <p id="demo"></p>
+    <div id="editioncaption" style="display: none;">
+        <form method="post"  action="/editcaption">
+            <span>Edition of Caption: </span><input type="text" name="updatedvalue"value="{{ img_caption }}"/>
+            <button class="btn btn-danger btn-xs">Submit</button>
+        </form>
+    </div>
+
     <div class="table-responsive">
         <table class="table table-striped table-sm table-hover table-dark text-center">
             <tbody>
@@ -29,4 +31,9 @@
         </table>
     </div>
     </body>
+    <script>
+        function myFunction() {
+          document.getElementById("editioncaption").style.display = "block";
+        }
+        </script>
 {% endblock %}

@@ -106,6 +106,15 @@ class ImageSQL:
     def deleteImageById(self, ID):
         statement = self.session.query(self.Image).filter(self.Image.ID == ID).delete()
         self.session.commit()
+    
+    def updatecaption(self, ID, newcaption):
+        try:
+            statement = select(self.Image).where(self.Image.ID == ID)
+            retrievedcaption = self.session.scalars(statement).one()
+            retrievedcaption.caption = newcaption
+            self.session.commit()
+        except Exception as e:
+            print(e)   
 
 
 class QuestionAnsSQL:

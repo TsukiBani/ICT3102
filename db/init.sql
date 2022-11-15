@@ -1,7 +1,5 @@
-CREATE
-database 02db;
-USE
-02db;
+CREATE database 02db;
+USE 02db;
 
 CREATE TABLE Image
 (

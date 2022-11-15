@@ -4,8 +4,8 @@ services:
     hostname: rabbitmq
     image: rabbitmq:latest
     ports:
-      - "5672:5672"
-      - "15762:15762"
+      - "5672:5672"   # Default connection
+      - "15672:15672" # Default Management
     networks:
       - ict3102_default
   app:

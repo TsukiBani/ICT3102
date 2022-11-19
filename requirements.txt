@@ -3,3 +3,7 @@ mysql-connector
 pika
 PyMySQL
 SQLAlchemy
+timm
+transformers
+fairscale
+pycocoevalcap

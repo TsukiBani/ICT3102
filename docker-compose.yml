@@ -42,29 +42,3 @@ services:
 networks:
   ict3102_default:
     driver: bridge
-
-  # ==============================================
-  # web:
-  #   build: .
-  #   ports:
-  #     - "5000:5000"
-  #   volumes:
-  #     - .:/code
-  #   # image: web:v1.0
-  # mysqldb:
-  #   # image: mysql:5.7
-  #   restart: always
-  #   volumes:
-  #     - ./mysql_data:/var/lib/mysql
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: pass
-  #     MYSQL_DATABASE: testdb
-  #     MYSQL_USER: user
-  #     MYSQL_PASSWORD: pass
-
-# ================================================
-
-# https://learn.microsoft.com/en-us/visualstudio/docker/tutorials/tutorial-multi-container-app-mysql
-# docker run -d --network 02_testnet --network-alias mysql -v todo-mysql-data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=02 mysql:5.7
-
-# docker run -dp 5000:5000 -w /app -v ${PWD}:/app  --network 02_testnet -e MYSQL_HOST=mysql -e MYSQL_USER=root  -e MYSQL_PASSWORD=root  -e MYSQL_DB=02  node:12-alpine sh -c "yarn install && yarn run dev"

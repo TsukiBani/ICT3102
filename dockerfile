@@ -29,7 +29,8 @@ EXPOSE 3306
 # Sets the working directory for following COPY and CMD instructions
 # Notice we haven’t created a directory by this name - this instruction
 # creates a directory with this name if it doesn’t exist
-WORKDIR /app
+# WORKDIR /app
+WORKDIR /code
 
 COPY requirements.txt requirements.txt
 # COPY init.sql docker-entrypoint-initdb.d/init.sql

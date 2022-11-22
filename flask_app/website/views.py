@@ -1,7 +1,6 @@
-import json
 import pika
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from website.models import ImageSQL
+from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask_app.website.models import ImageSQL
 
 views = Blueprint("views", __name__)
 
@@ -30,12 +29,12 @@ def home() -> str:
         imageUrl = 'None'
         if imageSQL.doesImageNameExist(nameOfImage) == 1:
             # TODO How to reject duplicates?
-            return render_template("index.html")
+            return render_template("templates/index.html")
         else:
             imageID = imageSQL.insertImage(name=nameOfImage, image_url=imageUrl)
             session['id'] = imageID[0]
             return redirect(url_for('views.reviewimage'))
-    return render_template("index.html")
+    return render_template("templates/index.html")
 
 
 @views.route("/reviewimage", methods=["GET", "POST"])
@@ -43,11 +42,11 @@ def reviewimage():
     ID = session['id']
     image = imageSQL.findById(ID)
     if request.method == "POST":
-        return render_template("reviewimage.html")
+        return render_template("templates/reviewimage.html")
     # TODO Be able to update caption
     # TODO Be able to update question
     # TODO Be able to update answer
-    return render_template("reviewimage.html", img_name=image[0],img_caption=image[2])
+    return render_template("templates/reviewimage.html", img_name=image[0], img_caption=image[2])
 
 @views.route("/editcaption", methods = ["POST"])
 def updatecaption():
@@ -57,13 +56,13 @@ def updatecaption():
         newcaptiondata = request.form["updatedvalue"]
         update = imageSQL.updatecaption(ID,newcaptiondata)
         return redirect(url_for("views.reviewimage"))
-    return render_template("reviewimage.html", img_name=image[0],img_caption=image[2])
+    return render_template("templates/reviewimage.html", img_name=image[0], img_caption=image[2])
 @views.route("/searchimage", methods=["GET", "POST"])
 def viewimage():
     results = imageSQL.get_all()
     if request.method == "POST":
         session['id'] = request.values.get('image')
         return redirect(url_for('views.reviewimage'))
-    return render_template("searchimage.html", results=results)
+    return render_template("templates/searchimage.html", results=results)
 
     

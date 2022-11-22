@@ -1,6 +1,6 @@
 from flask import Flask
 
-from website.views import views
+from flask_app.website.views import views
 
 
 def create_app():

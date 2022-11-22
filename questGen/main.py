@@ -16,29 +16,31 @@ class QuestionGen:
         return self.nlp(text)
 
 
+# while True:
+#     {}
+
 # Connection for Question Generator (Listen)
-connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host='localhost'))
+connection = pika.BlockingConnection(pika.ConnectionParameters(host="rabbitmq"))
 channel = connection.channel()
-channel.queue_declare(queue='QuestGen', durable=True)
+channel.queue_declare(queue="QuestGen", durable=True)
 
 
 def queueAnswerJob(questionID):
     # Connection for Answer Generator (Send)
-    connection2 = pika.BlockingConnection(
-        pika.ConnectionParameters(host='localhost'))
+    connection2 = pika.BlockingConnection(pika.ConnectionParameters(host="rabbitmq"))
     channel2 = connection2.channel()
-    channel2.queue_declare(queue='AnswerGen', durable=True)
+    channel2.queue_declare(queue="AnswerGen", durable=True)
 
     channel2.basic_publish(
-        exchange='',  # This publishes the thing to a default exchange
-        routing_key='AnswerGen',
+        exchange="",  # This publishes the thing to a default exchange
+        routing_key="AnswerGen",
         body=questionID,
         properties=pika.BasicProperties(
             delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE
-        ))
+        ),
+    )
     connection2.close()
-    # print("Inserted AnsJob" + questionID)
+    print("Inserted AnsJob" + questionID)
 
 
 # Initiate Question Generation Pipeline
@@ -69,8 +71,8 @@ def callback(ch, method, properties, body):
 
 
 channel.basic_qos(prefetch_count=1)
-channel.basic_consume(queue='QuestGen', on_message_callback=callback)
+channel.basic_consume(queue="QuestGen", on_message_callback=callback)
 
-# print('ReadyToConsume')
+print("ReadyToConsume")
 
 channel.start_consuming()

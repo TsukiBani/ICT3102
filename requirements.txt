@@ -7,10 +7,6 @@ transformers
 timm
 fairscale
 pycocoevalcap
-torch
-Pillow
-numpy
-requests
+numpy==1.21.6
 tts
-torchvision
 nltk

@@ -1,7 +1,7 @@
 import json
 import pika
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from website.models import ImageSQL, test_table
+from website.models import ImageSQL
 
 views = Blueprint("views", __name__)
 

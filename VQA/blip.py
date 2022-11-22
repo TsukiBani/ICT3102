@@ -8,13 +8,12 @@
 import warnings
 warnings.filterwarnings("ignore")
 
-from VQA.models.vit import VisionTransformer, interpolate_pos_embed
-from VQA.models.med import BertConfig, BertModel, BertLMHeadModel
+from vit import VisionTransformer, interpolate_pos_embed
+from med import BertConfig, BertModel, BertLMHeadModel
 from transformers import BertTokenizer
 
 import torch
 from torch import nn
-import torch.nn.functional as F
 
 import os
 from urllib.parse import urlparse

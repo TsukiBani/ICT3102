@@ -15,9 +15,11 @@ services:
     depends_on:
       - db
       - rabbitmq
+      - vqa
     links:
       - db
       - rabbitmq
+      - vqa
     ports:
       - "5000:5000"
     volumes: # Add this to mount the persistent volume to your container
@@ -27,6 +29,24 @@ services:
     networks:
       - ict3102_default
     command: ["./wait-for-it.sh","rabbitmq:5672","--","python","app.py"]
+  vqa:
+    build: .
+    container_name: vqa
+    depends_on:
+      - db
+      - rabbitmq
+    networks:
+      - ict3102_default
+    command: ["./wait-for-it.sh","rabbitmq:5672" ,"--","python","./VQA/main.py"]
+  questgen:
+    build: .
+    container_name: questgen
+    depends_on:
+      - db
+      - rabbitmq
+    networks:
+      - ict3102_default
+    command: ["./wait-for-it.sh","rabbitmq:5672" ,"--","python","./questGen/main.py"]
   db:
     container_name: db
     hostname: db

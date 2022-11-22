@@ -30,7 +30,7 @@ services:
       - imagedb_RELATIVE_CONTAINER_PATH=${imagedb_RELATIVE_CONTAINER_PATH}  
     networks:
       - ict3102_default
-    command: ["./wait-for-it.sh","rabbitmq:5672","--","python","app.py"]
+#    command: ["./wait-for-it.sh","rabbitmq:5672","--","python","app.py"]
 #  vqa:
 #    build: .
 #    container_name: vqa

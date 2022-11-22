@@ -10,9 +10,11 @@ EXPOSE 3306
 # creates a directory with this name if it doesn’t exist
 WORKDIR /app
 
-COPY . .
+COPY ./flask_app .
 # COPY init.sql docker-entrypoint-initdb.d/init.sql
 ADD ../../db/init.sql /docker-entrypoint-initdb.d
 
 RUN python -m pip install --upgrade pip
-RUN #pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host=files.pythonhosted.org --no-cache-dir -r requirements.txt
+RUN pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host=files.pythonhosted.org --no-cache-dir -r requirements.txt
+#CMD ls
+CMD python app.py

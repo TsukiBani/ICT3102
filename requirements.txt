@@ -7,10 +7,5 @@ transformers
 timm
 fairscale
 pycocoevalcap
-torch
-Pillow
-numpy
-requests
 tts
-torchvision
 nltk

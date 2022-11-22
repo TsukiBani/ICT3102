@@ -1,8 +1,13 @@
-from models.blip_vqa import blip_vqa
-from models.blip import blip_decoder
+from blip_vqa import blip_vqa
+from blip import blip_decoder
 import torch
 import pika
-from website.models import ImageSQL, QuestionAnsSQL
+from models import ImageSQL, QuestionAnsSQL
+from PIL import Image
+import requests
+from torchvision import transforms
+from torchvision.transforms.functional import InterpolationMode
+
 
 model_url = 'https://storage.googleapis.com/sfr-vision-language-research/BLIP/models/model_base_capfilt_large.pth'
 connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))  # Connect to CloudAMQP
@@ -45,12 +50,12 @@ def captionGen(imageID):
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-
 def caption_callback(ch, method, properties, body):
     image_size = 384
     ID = body.decode()
     image = ImageSQL.findById(ID)
     image_url = image[1]
+    # image_url = load_demo_image(image_size=image_size, device=device)
 
     model = blip_decoder(pretrained=model_url, image_size=image_size, vit='base')
     model.eval()
@@ -60,7 +65,7 @@ def caption_callback(ch, method, properties, body):
         # beam search
         caption = model.generate(image_url, sample=False, num_beams=3, max_length=20, min_length=5)
         # nucleus sampling
-        # caption = model.generate(image, sample=True, top_p=0.9, max_length=20, min_length=5)
+        caption = model.generate(image, sample=True, top_p=0.9, max_length=20, min_length=5)
         image_id = ImageSQL.getImageID(image[0])
         ImageSQL.updatecaption(image_id, caption[0])
         captionGen(image_id)

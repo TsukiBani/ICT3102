@@ -58,6 +58,12 @@
                   <div class="modal-content">
                     <h2>Edit Question and Answer</h2>
                     <form method="post"  action="/editqna">
+                      <input
+                        type="hidden"
+                        class="form-control"
+                        name="questionID"
+                        value="{{row.questionID}}"
+                      />
                       <label class="form-label mt-3">Question</label>
                       <input
                         type="text"

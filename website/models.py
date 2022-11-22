@@ -122,8 +122,8 @@ class QuestionAnsSQL:
 
     class QuestionAnswer(Base):
         __tablename__ = 'QuestionAnswer'
-        ID = db.Column(db.INTEGER, primary_key=True)
-        questionID = db.Column(db.INTEGER)
+        ID = db.Column(db.INTEGER)
+        questionID = db.Column(db.INTEGER, primary_key=True)
         question = db.Column(db.VARCHAR(255))
         answer = db.Column(db.VARCHAR(255))
 
@@ -149,8 +149,8 @@ class QuestionAnsSQL:
         """
         try:
             statement = select(self.QuestionAnswer).where(self.QuestionAnswer.questionID == QuestionID)
-            retrievedImage = self.session.scalars(statement).one()
-            retrievedImage.question = NewQuestion
+            retrievedcaption = self.session.scalars(statement).one()
+            retrievedcaption.question = NewQuestion
             self.session.commit()
         except Exception as e:
             return e

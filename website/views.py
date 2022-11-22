@@ -68,12 +68,12 @@ def viewimage():
         return redirect(url_for('views.reviewimage'))
     return render_template("searchimage.html", results=results)
 
-@views.route("/reviewimage/editqna", methods=["GET", "POST"])
+@views.route("/editqna", methods=["GET", "POST"])
 def editqna():
-    ID = session['id']
-    image = imageSQL.findById(ID)
     if request.method == "POST":
-        newcaptiondata = request.form["updatedvalue"]
-        update = imageSQL.updatecaption(ID,newcaptiondata)
+        questionid = request.form["questionID"]
+        question = request.form["question"]
+        answer = request.form["answer"]
+        questionansSQL.updateQuestions(questionid,question)
+        questionansSQL.updateAnswers(questionid,answer)
         return redirect(url_for("views.reviewimage"))
-    return render_template("reviewimage.html", img_name=image[0],img_caption=image[2])

@@ -1,7 +1,7 @@
 import json
 import pika
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from website.models import ImageSQL, test_table
+from website.models import ImageSQL,QuestionAnsSQL, test_table
 
 views = Blueprint("views", __name__)
 
@@ -12,6 +12,7 @@ ip = 'localhost'
 port = '3306'
 table = '02db'
 imageSQL = ImageSQL(username, password, ip, port, table)
+questionansSQL = QuestionAnsSQL(username, password, ip, port, table)
 
 # connection = pika.BlockingConnection(
 #     pika.ConnectionParameters(host='localhost'))
@@ -42,12 +43,13 @@ def home() -> str:
 def reviewimage():
     ID = session['id']
     image = imageSQL.findById(ID)
+    questionsql = questionansSQL.getDataByID(ID)
     if request.method == "POST":
         return render_template("reviewimage.html")
     # TODO Be able to update caption
     # TODO Be able to update question
     # TODO Be able to update answer
-    return render_template("reviewimage.html", img_name=image[0],img_caption=image[2])
+    return render_template("reviewimage.html", img_name=image[0],img_caption=image[2], qna = questionsql)
 
 @views.route("/editcaption", methods = ["POST"])
 def updatecaption():
@@ -66,4 +68,12 @@ def viewimage():
         return redirect(url_for('views.reviewimage'))
     return render_template("searchimage.html", results=results)
 
-    
+@views.route("/reviewimage/editqna", methods=["GET", "POST"])
+def editqna():
+    ID = session['id']
+    image = imageSQL.findById(ID)
+    if request.method == "POST":
+        newcaptiondata = request.form["updatedvalue"]
+        update = imageSQL.updatecaption(ID,newcaptiondata)
+        return redirect(url_for("views.reviewimage"))
+    return render_template("reviewimage.html", img_name=image[0],img_caption=image[2])

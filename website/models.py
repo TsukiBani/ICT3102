@@ -121,7 +121,7 @@ class QuestionAnsSQL:
     Base = declarative_base()
 
     class QuestionAnswer(Base):
-        __tablename__ = 'Image'
+        __tablename__ = 'QuestionAnswer'
         ID = db.Column(db.INTEGER, primary_key=True)
         questionID = db.Column(db.INTEGER)
         question = db.Column(db.VARCHAR(255))

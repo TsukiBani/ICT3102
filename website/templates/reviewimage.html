@@ -2,32 +2,87 @@
     <body>
     <h1>Review Image</h1>
     <h3>Image Name: {{ img_name }}</h3>
-    <h3>Caption: {{ img_caption }}</h3> <button class="btn btn-danger btn-xs" onclick="myFunction()">Edit</button>
-    <p id="demo"></p>
-    <div id="editioncaption" style="display: none;">
+    <h3>Caption: {{ img_caption }}<button class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="#editioncaption">Edit</button></h3> 
+    <!-- <div id="editioncaption" style="display: none;">
+        <h3>Edit Caption</h3>
         <form method="post"  action="/editcaption">
-            <span>Edition of Caption: </span><input type="text" name="updatedvalue"value="{{ img_caption }}"/>
+            <span>New Caption: </span><input type="text" name="updatedvalue"value="{{ img_caption }}" style="width:50%"/>
             <button class="btn btn-danger btn-xs">Submit</button>
         </form>
-    </div>
-
+        <br/>
+    </div> -->
+    <div id="editioncaption" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <h2>Edit Caption</h2>
+          <form method="post"  action="/editcaption">
+            <label class="form-label mt-3">Caption:</label>
+            <input type="text" name="updatedvalue"value="{{ img_caption }}"/>
+            <button class="btn btn-primary" type="submit">
+              Submit
+            </button>
+        </form>
+          
+        </div>
+      </div>
+     </div>
     <div class="table-responsive">
         <table class="table table-striped table-sm table-hover table-dark text-center">
             <tbody>
             <tr>
                 <th><b>Questions</b></th>
                 <th><b>Answers</b></th>
-                <th><b>Edit</b></th>
-            </tr>
+                <th></th>
+            </tr>            
+                {% for row in qna %}
             <tr>
-                <td>Question</td>
-                <td>Answer</td>
-                <td>
-                    <a href="/" class="btn btn-danger btn-xs">Edit</a>
-                    <a href="/" class="btn btn-warning btn-xs">Speech</a>
-                </td>
+                <div id="edit">
+                    <td><p>{{row.question}}</p></td>
+                    <td><p>{{row.answer}}</p></td>
+                </div>
+
+              <td>
+                <a
+                href="/reviewimage/update/{{row.questionID}}"
+                class="btn btn-danger btn-xs"
+                data-bs-toggle="modal"
+                data-bs-target="#modaledit{{row.questionID}}"
+                >Edit</a
+              >
+              <button class="btn btn-warning btn-xs">Speech</button>
+            </td>
             </tr>
+             <!-- Modal Edit  -->
+             <div id="modaledit{{row.questionID}}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <h2>Edit Question and Answer</h2>
+                    <form method="post"  action="/editqna">
+                      <label class="form-label mt-3">Question</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="question"
+                        value="{{row.question}}"
+                      />
+                      <label class="form-label mt-3">Answers</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="answer"
+                        value="{{row.answer}}"
+                      />
+                      <br/>
+                      <button class="btn btn-primary" type="submit">
+                        Submit
+                      </button>
+                    </form>
+                  </div>
+                </div>
+               </div>
+            {% endfor %}
             </tbody>
+            
         </table>
     </div>
     </body>
@@ -36,4 +91,5 @@
           document.getElementById("editioncaption").style.display = "block";
         }
         </script>
+
 {% endblock %}

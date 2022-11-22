@@ -20,6 +20,10 @@ services:
       - rabbitmq
     ports:
       - "5000:5000"
+    volumes: # Add this to mount the persistent volume to your container
+      - .${imagedb_RELATIVE_LOCAL_PATH}:${imagedb_RELATIVE_CONTAINER_PATH}
+    environment: # use os.environ.get("imagedb_RELATIVE_CONTAINER_PATH") in python to retrieve the imagedb URL
+      - imagedb_RELATIVE_CONTAINER_PATH=${imagedb_RELATIVE_CONTAINER_PATH}  
     networks:
       - ict3102_default
     command: ["./wait-for-it.sh","rabbitmq:5672","--","python","app.py"]
@@ -41,7 +45,7 @@ services:
       - ict3102_default
 networks:
   ict3102_default:
-    driver: bridge
+    driver: bridge 
 
   # ==============================================
   # web:

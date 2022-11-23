@@ -65,7 +65,7 @@ Sending Messages
 
 for i in range(items + 1):
     randomNumber = random.randrange(randRange)
-    publish_message(queue, str(randomNumber))
+    publish_message(queue, str(randomNumber)+"test")
 
 """
 Finish Sending

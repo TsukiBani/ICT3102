@@ -42,12 +42,13 @@ def home() -> str:
 def reviewimage():
     ID = session['id']
     image = imageSQL.findById(ID)
+    qnuestionsql = questionansSQL.getDataByID(ID)
     if request.method == "POST":
         return render_template("reviewimage.html")
     # TODO Be able to update caption
     # TODO Be able to update question
     # TODO Be able to update answer
-    return render_template("reviewimage.html", img_name=image[0], img_caption=image[2])
+    return render_template("reviewimage.html", img_name=image[0], img_caption=image[2], qna = qnuestionsql)
 
 @views.route("/editcaption", methods = ["POST"])
 def updatecaption():

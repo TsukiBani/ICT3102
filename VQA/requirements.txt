@@ -1,0 +1,6 @@
+transformers
+timm
+fairscale
+pycocoevalcap
+SQLAlchemy
+pika

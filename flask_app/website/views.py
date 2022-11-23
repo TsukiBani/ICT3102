@@ -1,6 +1,6 @@
 import pika
 from flask import Blueprint, render_template, request, redirect, url_for, session
-from website.models import ImageSQL
+from website.models import ImageSQL, QuestionAnsSQL
 
 views = Blueprint("views", __name__)
 
@@ -11,6 +11,7 @@ ip = 'db'
 port = '3306'
 table = '02db'
 imageSQL = ImageSQL(username, password, ip, port, table)
+questionansSQL = QuestionAnsSQL(username, password, ip, port, table)
 
 connection = pika.BlockingConnection(
     pika.ConnectionParameters(host='rabbitmq', heartbeat=600, blocked_connection_timeout=300))
@@ -42,11 +43,11 @@ def reviewimage():
     ID = session['id']
     image = imageSQL.findById(ID)
     if request.method == "POST":
-        return render_template("templates/reviewimage.html")
+        return render_template("reviewimage.html")
     # TODO Be able to update caption
     # TODO Be able to update question
     # TODO Be able to update answer
-    return render_template("templates/reviewimage.html", img_name=image[0], img_caption=image[2])
+    return render_template("reviewimage.html", img_name=image[0], img_caption=image[2])
 
 @views.route("/editcaption", methods = ["POST"])
 def updatecaption():
@@ -57,6 +58,7 @@ def updatecaption():
         update = imageSQL.updatecaption(ID,newcaptiondata)
         return redirect(url_for("views.reviewimage"))
     return render_template("reviewimage.html", img_name=image[0], img_caption=image[2])
+
 @views.route("/searchimage", methods=["GET", "POST"])
 def viewimage():
     results = imageSQL.get_all()
@@ -66,3 +68,17 @@ def viewimage():
     return render_template("searchimage.html", results=results)
 
     
+@views.route("/editqna", methods=["GET", "POST"])
+def editqna():
+    ID = session['id']
+    image = imageSQL.findById(ID)
+    if request.method == "POST":
+        newcaptiondata = request.form["updatedvalue"]
+        update = imageSQL.updatecaption(ID,newcaptiondata)
+        questionid = request.form["questionID"]
+        question = request.form["question"]
+        answer = request.form["answer"]
+        questionansSQL.updateQuestions(questionid,question)
+        questionansSQL.updateAnswers(questionid,answer)
+        return redirect(url_for("views.reviewimage"))
+    return render_template("reviewimage.html", img_name=image[0],img_caption=image[2])

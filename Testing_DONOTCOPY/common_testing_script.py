@@ -44,6 +44,7 @@ try:
         """
         Publishes message to destined queueName with message
         """
+        message = message+"test"
         channel.basic_publish(
             exchange='',  # This publishes the thing to a default exchange
             routing_key=queueName,
@@ -63,9 +64,10 @@ except Exception as e:
 Sending Messages
 """
 
-for i in range(items + 1):
-    randomNumber = random.randrange(randRange)
-    publish_message(queue, str(randomNumber)+"test")
+for i in range(1, items + 1):
+    # randomNumber = random.randrange(randRange)
+    # publish_message(queue, str(randomNumber))
+    publish_message(queue, str(i))
 
 """
 Finish Sending

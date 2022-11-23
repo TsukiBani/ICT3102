@@ -91,6 +91,8 @@ class ImageSQL:
             retrievedcaption = self.session.scalars(statement).one()
             retrievedcaption.caption = newcaption
             self.session.commit()
+            return self.session.query(self.Image.ID).filter(self.Image.ID == ID,
+                                                                             self.Image.caption == newcaption).one()
         except Exception as e:
             print(e)
 

@@ -1,6 +1,8 @@
 import pika
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from website.models import ImageSQL, QuestionAnsSQL
+from website.helper import captionGen
+import os
 
 views = Blueprint("views", __name__)
 
@@ -14,7 +16,7 @@ imageSQL = ImageSQL(username, password, ip, port, table)
 questionansSQL = QuestionAnsSQL(username, password, ip, port, table)
 
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host='rabbitmq', heartbeat=600, blocked_connection_timeout=300))
+    pika.ConnectionParameters(host='rabbitmq'))
 channel = connection.channel()
 
 # RabbitMQ Queue Declaration
@@ -27,12 +29,13 @@ channel.queue_declare(queue='AnswerGen', durable=True)  # Request for answer gen
 def home() -> str:
     if request.method == "POST":
         nameOfImage = request.values.get('image_name')
-        imageUrl = 'None'
+        imageUrl = os.environ.get("imagedb_RELATIVE_CONTAINER_PATH")+'/P1000654.JPG'
         if imageSQL.doesImageNameExist(nameOfImage) == 1:
             # TODO How to reject duplicates?
             return render_template("templates/index.html")
         else:
             imageID = imageSQL.insertImage(name=nameOfImage, image_url=imageUrl)
+            captionGen(str(imageID[0]))
             session['id'] = imageID[0]
             return redirect(url_for('views.reviewimage'))
     return render_template("index.html")

@@ -52,18 +52,22 @@ services:
         condition: service_healthy
     networks:
       - ict3102_default
-  questgen:
-    build:
-      dockerfile: ./questGen/dockerfile
-      context: .
-    container_name: questgen
-    depends_on:
-      db:
-        condition: service_started
-      rabbitmq:
-        condition: service_healthy
-    networks:
-      - ict3102_default
+    volumes: # Add this to mount the persistent volume to your container
+      - .${imagedb_RELATIVE_LOCAL_PATH}:${imagedb_RELATIVE_CONTAINER_PATH}
+    environment: # use os.environ.get("imagedb_RELATIVE_CONTAINER_PATH") in python to retrieve the imagedb URL
+      - imagedb_RELATIVE_CONTAINER_PATH=${imagedb_RELATIVE_CONTAINER_PATH}
+  #  questgen:
+#    build:
+#      dockerfile: ./questGen/dockerfile
+#      context: .
+#    container_name: questgen
+#    depends_on:
+#      db:
+#        condition: service_started
+#      rabbitmq:
+#        condition: service_healthy
+#    networks:
+#      - ict3102_default
   db:
     container_name: db
     hostname: db

@@ -1,5 +1,5 @@
 # Use an official Python runtime as an image
-FROM python:3.6
+FROM python:3.7
 
 # The EXPOSE instruction indicates the ports on which a container
 EXPOSE 5000
@@ -10,11 +10,13 @@ EXPOSE 3306
 # creates a directory with this name if it doesn’t exist
 WORKDIR /app
 
-COPY ./flask_app .
+COPY ./flask_app /app
 # COPY init.sql docker-entrypoint-initdb.d/init.sql
-ADD ../../db/init.sql /docker-entrypoint-initdb.d
+ADD ./db/init.sql /docker-entrypoint-initdb.d
 
 RUN python -m pip install --upgrade pip
-RUN pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host=files.pythonhosted.org --no-cache-dir -r requirements.txt
-#CMD ls
-CMD python app.py
+RUN pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host=files.pythonhosted.org --no-cache-dir -r ./requirements.txt
+RUN dir /app
+# CMD python -m flask --app app run
+CMD ["./app/wait-for-it.sh","rabbitmq:5672"]
+CMD ["python", "-m" , "flask", "run", "--host=0.0.0.0"]

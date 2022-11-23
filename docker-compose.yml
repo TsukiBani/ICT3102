@@ -30,16 +30,18 @@ services:
       - imagedb_RELATIVE_CONTAINER_PATH=${imagedb_RELATIVE_CONTAINER_PATH}  
     networks:
       - ict3102_default
-#    command: ["./wait-for-it.sh","rabbitmq:5672","--","python","app.py"]
+#    command: ["./wait-for-it.sh","rabbitmq:5672","--", "python", "-m" , "flask", "run", "--host=0.0.0.0"]
 #  vqa:
-#    build: .
+#    build:
+#      dockerfile: ./VQA/dockerfile
+#      context: .
 #    container_name: vqa
 #    depends_on:
 #      - db
 #      - rabbitmq
 #    networks:
 #      - ict3102_default
-#    command: ["./wait-for-it.sh","rabbitmq:5672" ,"--","python","./VQA/main.py"]
+#    command: ["./wait-for-it.sh","rabbitmq:5672" ,"--","python","main.py"]
 #  questgen:
 #    build:
 #      dockerfile: ./questGen/dockerfile

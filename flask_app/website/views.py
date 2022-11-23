@@ -1,6 +1,6 @@
 import pika
 from flask import Blueprint, render_template, request, redirect, url_for, session
-from flask_app.website.models import ImageSQL
+from website.models import ImageSQL
 
 views = Blueprint("views", __name__)
 
@@ -13,7 +13,7 @@ table = '02db'
 imageSQL = ImageSQL(username, password, ip, port, table)
 
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host='rabbitmq'))
+    pika.ConnectionParameters(host='rabbitmq', heartbeat=600, blocked_connection_timeout=300))
 channel = connection.channel()
 
 # RabbitMQ Queue Declaration
@@ -34,7 +34,7 @@ def home() -> str:
             imageID = imageSQL.insertImage(name=nameOfImage, image_url=imageUrl)
             session['id'] = imageID[0]
             return redirect(url_for('views.reviewimage'))
-    return render_template("templates/index.html")
+    return render_template("index.html")
 
 
 @views.route("/reviewimage", methods=["GET", "POST"])
@@ -56,13 +56,13 @@ def updatecaption():
         newcaptiondata = request.form["updatedvalue"]
         update = imageSQL.updatecaption(ID,newcaptiondata)
         return redirect(url_for("views.reviewimage"))
-    return render_template("templates/reviewimage.html", img_name=image[0], img_caption=image[2])
+    return render_template("reviewimage.html", img_name=image[0], img_caption=image[2])
 @views.route("/searchimage", methods=["GET", "POST"])
 def viewimage():
     results = imageSQL.get_all()
     if request.method == "POST":
         session['id'] = request.values.get('image')
         return redirect(url_for('views.reviewimage'))
-    return render_template("templates/searchimage.html", results=results)
+    return render_template("searchimage.html", results=results)
 
     

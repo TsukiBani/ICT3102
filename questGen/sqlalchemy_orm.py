@@ -164,6 +164,6 @@ class QuestionAnsSQL:
             self.session.add(self.QuestionAnswer(ID=ID, question=Question))
             self.session.commit()
             return self.session.query(self.QuestionAnswer.questionID).filter(self.QuestionAnswer.ID == ID,
-                                                                             self.QuestionAnswer.question == Question).one()
+                                                                             self.QuestionAnswer.question == Question).first()
         except Exception as e:
             return e

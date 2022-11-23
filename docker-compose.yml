@@ -23,39 +23,28 @@ services:
     depends_on:
       db:
         condition: service_started
-#      vqa:
-#        condition: service_started
+      vqa:
+        condition: service_started
       rabbitmq:
         condition: service_healthy
     links:
       - db
       - rabbitmq
-#      - vqa
+      - vqa
     ports:
       - "5000:5000"
     volumes: # Add this to mount the persistent volume to your container
       - .${imagedb_RELATIVE_LOCAL_PATH}:${imagedb_RELATIVE_CONTAINER_PATH}
     environment: # use os.environ.get("imagedb_RELATIVE_CONTAINER_PATH") in python to retrieve the imagedb URL
-      - imagedb_RELATIVE_CONTAINER_PATH=${imagedb_RELATIVE_CONTAINER_PATH}
+      - imagedb_RELATIVE_CONTAINER_PATH=${imagedb_RELATIVE_CONTAINER_PATH}  
     networks:
       - ict3102_default
-  #  vqa:
-  #    build:
-  #      dockerfile: ./VQA/dockerfile
-  #      context: .
-  #    container_name: vqa
-  #    depends_on:
-  #      db:
-  #        condition: service_started
-  #      rabbitmq:
-  #        condition: service_healthy
-  #    networks:
-  #      - ict3102_default
-  questgen:
+#    command: ["./wait-for-it.sh","rabbitmq:5672","--", "python", "-m" , "flask", "run", "--host=0.0.0.0"]
+  vqa:
     build:
-      dockerfile: ./questGen/dockerfile
+      dockerfile: ./VQA/dockerfile
       context: .
-    container_name: questgen
+    container_name: vqa
     depends_on:
       db:
         condition: service_started
@@ -63,6 +52,18 @@ services:
         condition: service_healthy
     networks:
       - ict3102_default
+#    command: ["./wait-for-it.sh","rabbitmq:5672" ,"--","python","./main.py"]
+#  questgen:
+#    build:
+#      dockerfile: ./questGen/dockerfile
+#      context: .
+#    container_name: questgen
+#    depends_on:
+#      - db
+#      - rabbitmq
+#    networks:
+#      - ict3102_default
+#    command: ["./wait-for-it.sh","rabbitmq:5672" ,"--","python","main.py"]
   db:
     container_name: db
     hostname: db
@@ -81,7 +82,7 @@ services:
       - ict3102_default
 networks:
   ict3102_default:
-    driver: bridge
+    driver: bridge 
 
   # ==============================================
   # web:

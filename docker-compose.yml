@@ -8,6 +8,12 @@ services:
       - "15672:15672" # Default Management
     networks:
       - ict3102_default
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
   app:
     # image: jaspzx/3102:latest
     build:
@@ -15,13 +21,16 @@ services:
       context: .
     container_name: app
     depends_on:
-      - db
-      - rabbitmq
-#      - vqa
+      db:
+        condition: service_started
+      vqa:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
     links:
       - db
       - rabbitmq
-#      - vqa
+      - vqa
     ports:
       - "5000:5000"
     volumes: # Add this to mount the persistent volume to your container
@@ -31,17 +40,19 @@ services:
     networks:
       - ict3102_default
 #    command: ["./wait-for-it.sh","rabbitmq:5672","--", "python", "-m" , "flask", "run", "--host=0.0.0.0"]
-#  vqa:
-#    build:
-#      dockerfile: ./VQA/dockerfile
-#      context: .
-#    container_name: vqa
-#    depends_on:
-#      - db
-#      - rabbitmq
-#    networks:
-#      - ict3102_default
-#    command: ["./wait-for-it.sh","rabbitmq:5672" ,"--","python","main.py"]
+  vqa:
+    build:
+      dockerfile: ./VQA/dockerfile
+      context: .
+    container_name: vqa
+    depends_on:
+      db:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - ict3102_default
+#    command: ["./wait-for-it.sh","rabbitmq:5672" ,"--","python","./main.py"]
 #  questgen:
 #    build:
 #      dockerfile: ./questGen/dockerfile

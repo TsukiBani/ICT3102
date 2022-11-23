@@ -9,11 +9,14 @@ from models import ImageSQL, QuestionAnsSQL
 from PIL import Image
 from torchvision import transforms
 from torchvision.transforms import InterpolationMode
+
+
 # import requests
 
 
 def VQA():
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))  # Connect to CloudAMQP
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq', heartbeat=600,
+                                                                   blocked_connection_timeout=300))  # Connect to CloudAMQP
     channel = connection.channel()  # start a channel
     channel.queue_declare(queue='CaptionGen', durable=True)  # Declare a queue
     channel.queue_declare(queue='AnswerGen', durable=True)
@@ -21,7 +24,6 @@ def VQA():
     # Initiate SQLConnector
     IMG_control = ImageSQL("root", "root", "db", "3306", "02db")
     QA_control = QuestionAnsSQL("root", "root", "db", "3306", "02db")
-
 
     def captionGen(imageID):
         connection2 = pika.BlockingConnection(
@@ -71,7 +73,6 @@ def VQA():
     def caption_callback(ch, method, properties, body):
         image_size = 384
         ID = int(body.decode())
-        print(ID)
         image = IMG_control.findById(ID)
         image_url = image[1]
         print(image_url)
@@ -91,7 +92,7 @@ def VQA():
             print(caption)
             result = IMG_control.updatecaption(ID, caption[0])
             captionGen(str(result[0]))
-            print('caption: ' + result[1])
+            print('caption: ' + caption[0])
 
     # ch, method, properties, body
     def answer_callback(ch, method, properties, body):

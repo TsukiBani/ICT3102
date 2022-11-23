@@ -52,18 +52,18 @@ services:
         condition: service_healthy
     networks:
       - ict3102_default
-#    command: ["./wait-for-it.sh","rabbitmq:5672" ,"--","python","./main.py"]
-#  questgen:
-#    build:
-#      dockerfile: ./questGen/dockerfile
-#      context: .
-#    container_name: questgen
-#    depends_on:
-#      - db
-#      - rabbitmq
-#    networks:
-#      - ict3102_default
-#    command: ["./wait-for-it.sh","rabbitmq:5672" ,"--","python","main.py"]
+  questgen:
+    build:
+      dockerfile: ./questGen/dockerfile
+      context: .
+    container_name: questgen
+    depends_on:
+      db:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - ict3102_default
   db:
     container_name: db
     hostname: db

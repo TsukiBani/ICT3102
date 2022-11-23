@@ -47,8 +47,8 @@ def queueAnswerJob(questionID):
 QG = QuestionGen()
 
 # Initiate SQLConnector
-IMG_control = ImageSQL("root", "root", "localhost", "3306", "02db")
-QA_control = QuestionAnsSQL("root", "root", "localhost", "3306", "02db")
+IMG_control = ImageSQL("root", "root", "db", "3306", "02db")
+QA_control = QuestionAnsSQL("root", "root", "db", "3306", "02db")
 
 
 def callback(ch, method, properties, body):

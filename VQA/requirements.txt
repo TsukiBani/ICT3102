@@ -3,3 +3,4 @@ timm
 fairscale
 pycocoevalcap
 SQLAlchemy
+pika

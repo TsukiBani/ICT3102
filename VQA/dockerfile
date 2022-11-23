@@ -1,10 +1,10 @@
-FROM python:latest
+FROM python:3.7
 
 WORKDIR /app/VQA
 
 # RUN python -m pip install --upgrade pip
-# RUN pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host=files.pythonhosted.org --no-cache-dir -r requirements.txt
 
 # Run main.py when the container launches
-COPY . .
+COPY ./VQA /app/VQA
+RUN pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host=files.pythonhosted.org --no-cache-dir -r requirements.txt
 CMD python main.py

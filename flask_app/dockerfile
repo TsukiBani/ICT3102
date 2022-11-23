@@ -18,5 +18,4 @@ RUN python -m pip install --upgrade pip
 RUN pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host=files.pythonhosted.org --no-cache-dir -r ./requirements.txt
 RUN dir /app
 # CMD python -m flask --app app run
-CMD ["./app/wait-for-it.sh","rabbitmq:5672"]
 CMD ["python", "-m" , "flask", "run", "--host=0.0.0.0"]

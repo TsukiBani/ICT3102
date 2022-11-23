@@ -54,19 +54,30 @@ QA_control = QuestionAnsSQL("root", "root", "db", "3306", "02db")
 def callback(ch, method, properties, body):
     # Decode the ID
     ID = body.decode()
-    # Retrieve the caption
-    caption = IMG_control.findById(ID)[2]
-    # print("Caption: " + caption)
-    # Generate Questions
-    result = QG.processText(caption)
-    # Insert Questions
-    for question in result:
-        # print("Question: " + question)
-        # Insert question into DB
-        questionID = QA_control.insertQuestion(ID, question)[0]
-        # print(questionID)
-        # Generate Answer Queue Job
-        queueAnswerJob(str(questionID))
+    if 'test' in ID:  # Testing Route
+        # Remove test
+        ID = ID.replace("test", "")
+        # Retrieve the caption
+        caption = IMG_control.findById(ID)[2]
+        # Generate Questions
+        result = QG.processText(caption)
+        for question in result:
+            # print("Question: " + question)
+            print("Completed" + ID)
+    else:  # Commercial Route
+        # Retrieve the caption
+        caption = IMG_control.findById(ID)[2]
+        # print("Caption: " + caption)
+        # Generate Questions
+        result = QG.processText(caption)
+        # Insert Questions
+        for question in result:
+            # print("Question: " + question)
+            # Insert question into DB
+            questionID = QA_control.insertQuestion(ID, question)[0]
+            # print(questionID)
+            # Generate Answer Queue Job
+            queueAnswerJob(str(questionID))
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 

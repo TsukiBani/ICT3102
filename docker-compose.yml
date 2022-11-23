@@ -2,7 +2,7 @@ services:
   rabbitmq:
     container_name: rabbitmq
     hostname: rabbitmq
-    image: rabbitmq:latest
+    image: rabbitmq:management
     ports:
       - "5672:5672"   # Default connection
       - "15672:15672" # Default Management

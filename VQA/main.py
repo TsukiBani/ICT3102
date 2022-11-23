@@ -115,7 +115,7 @@ def VQA():
     channel.basic_qos(prefetch_count=1)
     channel.basic_consume(queue='CaptionGen', on_message_callback=caption_callback)
     channel.basic_consume(queue='AnswerGen', on_message_callback=answer_callback)
-    print(' [*] Waiting for messages. To exit press CTRL+C')
+    print(' [*] VQA container waiting for messages.')
     channel.start_consuming()
 
 

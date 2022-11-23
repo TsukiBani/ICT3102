@@ -54,38 +54,38 @@
             </tr>
              <!-- Modal Edit  -->
              <div id="modaledit{{row.questionID}}" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <h2>Edit Question and Answer</h2>
-                    <form method="post"  action="/editqna">
-                      <input
-                        type="hidden"
-                        class="form-control"
-                        name="questionID"
-                        value="{{row.questionID}}"
-                      />
-                      <label class="form-label mt-3">Question</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        name="question"
-                        value="{{row.question}}"
-                      />
-                      <label class="form-label mt-3">Answers</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        name="answer"
-                        value="{{row.answer}}"
-                      />
-                      <br/>
-                      <button class="btn btn-primary" type="submit">
-                        Submit
-                      </button>
-                    </form>
-                  </div>
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <h2>Edit Question and Answer</h2>
+                  <form method="post"  action="/editqna">
+                    <input
+                      type="hidden"
+                      class="form-control"
+                      name="questionID"
+                      value="{{row.questionID}}"
+                    />
+                    <label class="form-label mt-3">Question</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="question"
+                      value="{{row.question}}"
+                    />
+                    <label class="form-label mt-3">Answers</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="answer"
+                      value="{{row.answer}}"
+                    />
+                    <br/>
+                    <button class="btn btn-primary" type="submit">
+                      Submit
+                    </button>
+                  </form>
                 </div>
-               </div>
+              </div>
+             </div>
             {% endfor %}
             </tbody>
             

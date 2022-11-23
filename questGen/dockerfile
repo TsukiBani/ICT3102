@@ -3,9 +3,9 @@ FROM python:3.10.8-bullseye
 WORKDIR /app/questGen
 
 # Run main.py when the container launches
-COPY . .
+COPY ./questGen ./app/questGen
 
-RUN pip install -r requirements.txt
+RUN pip install -r ./requirements.txt
 RUN #python -m nltk.downloader punkt
 
 # copy origin destination

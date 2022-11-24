@@ -35,42 +35,58 @@ class ImageSQL:
         Returns Image Table in List Form
         List of (ID, Name, URL, Caption)
         """
-        result = self.session.query(self.Image.ID, self.Image.name, self.Image.image_url, self.Image.caption).all()
-        return result
+        try:
+            result = self.session.query(self.Image.ID, self.Image.name, self.Image.image_url, self.Image.caption).all()
+            return result
+        except Exception as e:
+            self.session.rollback()        
 
     def doesImageNameExist(self, name):
         """
         Returns Count of Name
         Used to check if name exists
         """
-        result = self.session.query(self.Image.name).filter(self.Image.name == name).count()
-        return result
+        try:
+            result = self.session.query(self.Image.name).filter(self.Image.name == name).count()
+            return result
+        except Exception as e:
+            self.session.rollback()
 
     def insertImage(self, name, image_url):
         """
         Insert Image, returns ID of image
         """
-        self.session.add(self.Image(image_url=image_url, name=name))
-        self.session.commit()
-        result = self.session.query(self.Image.ID).filter(
-            self.Image.name == name).one()
-        return result
+        try:
+            self.session.add(self.Image(image_url=image_url, name=name))
+            self.session.commit()
+            result = self.session.query(self.Image.ID).filter(
+                self.Image.name == name).one()
+            return result
+        except Exception as e:
+            self.session.rollback()
+
 
     def getImageID(self, name):
         """
         No idea where this is used
         """
-        result = self.session.query(self.Image.ID).filter(
-            self.Image.name == name).one()
-        return result
+        try:
+            result = self.session.query(self.Image.ID).filter(
+                self.Image.name == name).one()
+            return result
+        except Exception as e:
+            self.session.rollback()
 
     def findById(self, ID):
         """
         Returns Image Name, URL, Caption
         """
-        result = self.session.query(self.Image.name, self.Image.image_url, self.Image.caption).filter(
-            self.Image.ID == ID).one()
-        return result
+        try:
+            result = self.session.query(self.Image.name, self.Image.image_url, self.Image.caption).filter(
+                self.Image.ID == ID).one()
+            return result
+        except Exception as e:
+            self.session.rollback()
 
     def updateImageURL(self, ID, new_URL):
         try:
@@ -92,6 +108,7 @@ class ImageSQL:
             retrievedcaption.caption = newcaption
             self.session.commit()
         except Exception as e:
+            self.session.rollback()
             print(e)
 
 
@@ -116,10 +133,15 @@ class QuestionAnsSQL:
         Returns list of list? for matching ID
         Format is (questionID, question, answer)
         """
-        result = self.session.query(self.QuestionAnswer.questionID, self.QuestionAnswer.question,
-                                    self.QuestionAnswer.answer).filter(
-            self.QuestionAnswer.ID == ID).all()
-        return result
+        try:
+            result = self.session.query(self.QuestionAnswer.questionID, self.QuestionAnswer.question,
+                                        self.QuestionAnswer.answer).filter(
+                self.QuestionAnswer.ID == ID).all()
+            return result
+        except Exception as e:
+            self.session.rollback()
+            return e
+
 
     def updateQuestions(self, QuestionID, NewQuestion):
         """
@@ -131,6 +153,7 @@ class QuestionAnsSQL:
             retrievedImage.question = NewQuestion
             self.session.commit()
         except Exception as e:
+            self.session.rollback()
             return e
 
     def updateAnswers(self, QuestionID, NewAnswer):
@@ -143,6 +166,7 @@ class QuestionAnsSQL:
             retrievedImage.answer = NewAnswer
             self.session.commit()
         except Exception as e:
+            self.session.rollback()
             return e
 
     def delete_QuestionAnswer(self, QuestionID):
@@ -154,15 +178,21 @@ class QuestionAnsSQL:
                 self.QuestionAnswer.questionID == QuestionID).delete()
             self.session.commit()
         except Exception as e:
+            self.session.rollback()
             return e
 
     def insertQuestion(self, ID, Question):
         """
     Insert Question, returns generated QuestionID
         """
-        self.session.add(self.QuestionAnswer(ID=ID, question=Question, answer=""))
-        self.session.commit()
-        result = self.session.query(self.QuestionAnswer.questionID) \
-            .filter(self.QuestionAnswer.ID == ID, self.QuestionAnswer.question == Question) \
-            .one()
-        return result
+        try:
+            self.session.add(self.QuestionAnswer(ID=ID, question=Question, answer=""))
+            self.session.commit()
+            result = self.session.query(self.QuestionAnswer.questionID) \
+                .filter(self.QuestionAnswer.ID == ID, self.QuestionAnswer.question == Question) \
+                .one()
+            return result
+        except Exception as e:
+            self.session.rollback()
+            return e
+

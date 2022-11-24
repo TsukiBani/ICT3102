@@ -1,8 +1,20 @@
 {% extends 'base.html' %} {% include 'header.html' %} {% block title %} Home {% endblock %} {% block body %}
     <body>
     <h1>Review Image</h1>
+    {% with messages = get_flashed_messages() %} {% if messages %} {% for
+    message in messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+        ></button>
+        {{ message }}
+    </div>
+    {% endfor %} {% endif %} {% endwith %}
     <h3>Image Name: {{ img_name }}</h3>
-    <h3>Caption: {{ img_caption }}<button class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="#editioncaption">Edit</button></h3> 
+    <h3>Caption: {{ img_caption }}<button class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="#editioncaption">Edit</button></h3>
     <!-- <div id="editioncaption" style="display: none;">
         <h3>Edit Caption</h3>
         <form method="post"  action="/editcaption">
@@ -22,7 +34,7 @@
               Submit
             </button>
         </form>
-          
+
         </div>
       </div>
      </div>
@@ -33,7 +45,7 @@
                 <th><b>Questions</b></th>
                 <th><b>Answers</b></th>
                 <th></th>
-            </tr>            
+            </tr>
                 {% for row in qna %}
             <tr>
                 <div id="edit">
@@ -88,7 +100,7 @@
              </div>
             {% endfor %}
             </tbody>
-            
+
         </table>
     </div>
     </body>

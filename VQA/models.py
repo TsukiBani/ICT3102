@@ -123,6 +123,13 @@ class QuestionAnsSQL:
             self.QuestionAnswer.ID == ID).all()
         return result
 
+    def getDataByQuestionID(self, questionID):
+
+        result = self.session.query(self.QuestionAnswer.ID, self.QuestionAnswer.question,
+                                    self.QuestionAnswer.answer).filter(
+            self.QuestionAnswer.questionID == questionID).all()
+        return result
+
     def updateQuestions(self, QuestionID, NewQuestion):
         """
         Search by QuestionID, Updates using NewQuestion

@@ -34,10 +34,10 @@ channel.queue_declare(queue="AnswerGen", durable=True)  # Request for answer gen
 def home() -> str:
     if request.method == "POST":
         nameOfImage = request.values.get('image_name')
-        imageUrl = os.environ.get("imagedb_RELATIVE_CONTAINER_PATH")+'/P1000654.JPG'
+        imageUrl = os.environ.get("imagedb_RELATIVE_CONTAINER_PATH") + '/P1000654.JPG'
         if imageSQL.doesImageNameExist(nameOfImage) == 1:
             # TODO How to reject duplicates?
-            return render_template("templates/index.html")
+            return render_template("index.html")
         else:
             imageID = imageSQL.insertImage(name=nameOfImage, image_url=imageUrl)
             captionGen(str(imageID[0]))

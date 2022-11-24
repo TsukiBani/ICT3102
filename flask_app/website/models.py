@@ -102,8 +102,10 @@ class ImageSQL:
             retrievedImage = self.session.scalars(statement).one()
             retrievedImage.image_url = new_URL
             self.session.commit()
+            return True
         except Exception as e:
             print(e)
+            return False
 
     def deleteImageById(self, ID):
         try:

@@ -14,5 +14,4 @@ def captionGen(imageID):
         properties=pika.BasicProperties(
             delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE
         ))
-    print("Message sent")
     connection3.close()

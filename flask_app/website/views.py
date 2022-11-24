@@ -1,5 +1,5 @@
 import pika
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from website.models import ImageSQL, QuestionAnsSQL
 from website.helper import captionGen
 import os
@@ -31,7 +31,7 @@ channel.queue_declare(queue="AnswerGen", durable=True)  # Request for answer gen
 
 
 @views.route("/", methods=["GET", "POST"])
-def home() -> str:
+def home():
     if request.method == "POST":
         nameOfImage = request.values.get('image_name')
         imageUrl = os.environ.get("imagedb_RELATIVE_CONTAINER_PATH") + '/P1000654.JPG'
@@ -51,34 +51,53 @@ def reviewimage():
     ID = session["id"]
     image = imageSQL.findById(ID)
     qnuestionsql = questionansSQL.getDataByID(ID)
-    if request.method == "POST":
-        return render_template("reviewimage.html")
-    # TODO Be able to update caption
-    # TODO Be able to update question
-    # TODO Be able to update answer
-    return render_template(
-        "reviewimage.html", img_name=image[0], img_caption=image[2], qna=qnuestionsql
-    )
+    if ID:
+        if image and qnuestionsql:
+            if request.method == "POST":
+                return redirect(url_for("views.home"))
+            # TODO Be able to update caption
+            # TODO Be able to update question
+            # TODO Be able to update answer
+            return render_template(
+                "reviewimage.html", img_name=image[0], img_caption=image[2], qna=qnuestionsql
+            )
+        else:
+            flash("Insert not yet complete found, please wait for a while before refresh")
+            return render_template("reviewimage.html")
+    else:
+        flash("No image or question not found")
+        return redirect(url_for("views.home"))
 
 
 @views.route("/editcaption", methods=["POST"])
 def updatecaption():
     ID = session["id"]
     image = imageSQL.findById(ID)
-    if request.method == "POST":
-        newcaptiondata = request.form["updatedvalue"]
-        update = imageSQL.updatecaption(ID, newcaptiondata)
-        return redirect(url_for("views.reviewimage"))
-    return render_template("reviewimage.html", img_name=image[0], img_caption=image[2])
+    if image:
+        if request.method == "POST":
+            newcaptiondata = request.form["updatedvalue"]
+            update = imageSQL.updatecaption(ID, newcaptiondata)
+            if update:
+                flash("Caption updated successfully")
+            else:
+                flash("Caption updated unsuccessfully")
+        return render_template("reviewimage.html", img_name=image[0], img_caption=image[2])
+    else:
+        flash("Image not found")
+        return redirect(url_for("views.home"))
 
 
 @views.route("/searchimage", methods=["GET", "POST"])
 def viewimage():
     results = imageSQL.get_all()
-    if request.method == "POST":
-        session["id"] = request.values.get("image")
-        return redirect(url_for("views.reviewimage"))
-    return render_template("searchimage.html", results=results)
+    if results:
+        if request.method == "POST":
+            session["id"] = request.values.get("image")
+            return redirect(url_for("views.reviewimage"))
+        return render_template("searchimage.html", results=results)
+    else:
+        flash("Images not found")
+        return redirect(url_for("views.home"))
 
 
 @views.route("/editqna", methods=["GET", "POST"])
@@ -87,6 +106,10 @@ def editqna():
         questionid = request.form["questionID"]
         question = request.form["question"]
         answer = request.form["answer"]
-        questionansSQL.updateQuestions(questionid, question)
-        questionansSQL.updateAnswers(questionid, answer)
+        question_update = questionansSQL.updateQuestions(questionid, question)
+        answer_update = questionansSQL.updateAnswers(questionid, answer)
+        if not question_update and not answer_update:
+            flash("Question or answer not updated successfully")
+        else:
+            flash("Question or answer updated successfully")
         return redirect(url_for("views.reviewimage"))

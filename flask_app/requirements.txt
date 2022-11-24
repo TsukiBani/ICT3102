@@ -3,4 +3,3 @@ mysql-connector
 pika
 PyMySQL
 SQLAlchemy
-Flask-Limiter

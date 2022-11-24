@@ -1,14 +1,12 @@
 import pika
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from website.models import ImageSQL, QuestionAnsSQL
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
+
 views = Blueprint("views", __name__)
 
-limiter = Limiter(views, key_func=get_remote_address)
 # TODO Do we need to provide users with a way to key in their database credentials?
 username = 'root'
-password = 'root' 
+password = 'root'
 ip = 'db'
 port = '3306'
 table = '02db'
@@ -63,7 +61,6 @@ def updatecaption():
     return render_template("reviewimage.html", img_name=image[0],img_caption=image[2])
 
 @views.route("/searchimage", methods=["GET", "POST"])
-@limiter.limit("10/mintue")
 def viewimage():
     results = imageSQL.get_all()
     if request.method == "POST":

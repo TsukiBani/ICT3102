@@ -4,6 +4,8 @@ WORKDIR /app/VQA
 
 # Run main.py when the container launches
 COPY ./VQA /app/VQA
-RUN python -m pip install --upgrade pip
-RUN pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host=files.pythonhosted.org --no-cache-dir -r ./requirements.txt
+RUN curl -LJO https://storage.googleapis.com/sfr-vision-language-research/BLIP/models/model_base_capfilt_large.pth
+RUN curl -LJO https://storage.googleapis.com/sfr-vision-language-research/BLIP/models/model_base_vqa_capfilt_large.pth
+RUN pip install -U pip setuptools wheel
+RUN pip install --prefer-binary -r ./requirements.txt
 CMD ["python", "-u", "main.py"]

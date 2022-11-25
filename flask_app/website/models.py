@@ -124,6 +124,7 @@ class ImageSQL:
             self.session.commit()
             return True
         except Exception as e:
+            self.session.rollback()
             print(e)
             return False
 

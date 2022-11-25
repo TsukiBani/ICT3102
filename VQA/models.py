@@ -91,6 +91,8 @@ class ImageSQL:
             retrievedcaption = self.session.scalars(statement).one()
             retrievedcaption.caption = newcaption
             self.session.commit()
+            return self.session.query(self.Image.ID).filter(self.Image.ID == ID,
+                                                                             self.Image.caption == newcaption).one()
         except Exception as e:
             print(e)
 
@@ -119,6 +121,13 @@ class QuestionAnsSQL:
         result = self.session.query(self.QuestionAnswer.questionID, self.QuestionAnswer.question,
                                     self.QuestionAnswer.answer).filter(
             self.QuestionAnswer.ID == ID).all()
+        return result
+
+    def getDataByQuestionID(self, questionID):
+
+        result = self.session.query(self.QuestionAnswer.ID, self.QuestionAnswer.question,
+                                    self.QuestionAnswer.answer).filter(
+            self.QuestionAnswer.questionID == questionID).all()
         return result
 
     def updateQuestions(self, QuestionID, NewQuestion):

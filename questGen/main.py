@@ -20,14 +20,16 @@ class QuestionGen:
 #     {}
 
 # Connection for Question Generator (Listen)
-connection = pika.BlockingConnection(pika.ConnectionParameters(host="rabbitmq"))
+connection = pika.BlockingConnection(pika.ConnectionParameters(host="rabbitmq", heartbeat=600,
+                                                               blocked_connection_timeout=300))
 channel = connection.channel()
 channel.queue_declare(queue="QuestGen", durable=True)
 
 
 def queueAnswerJob(questionID):
     # Connection for Answer Generator (Send)
-    connection2 = pika.BlockingConnection(pika.ConnectionParameters(host="rabbitmq"))
+    connection2 = pika.BlockingConnection(pika.ConnectionParameters(host="rabbitmq", heartbeat=600,
+                                                                    blocked_connection_timeout=300))
     channel2 = connection2.channel()
     channel2.queue_declare(queue="AnswerGen", durable=True)
 

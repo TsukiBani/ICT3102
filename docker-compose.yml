@@ -39,7 +39,7 @@ services:
       - imagedb_RELATIVE_CONTAINER_PATH=${imagedb_RELATIVE_CONTAINER_PATH}  
     networks:
       - ict3102_default
-#    command: ["./wait-for-it.sh","rabbitmq:5672","--", "python", "-m" , "flask", "run", "--host=0.0.0.0"]
+
   vqa:
     build:
       dockerfile: ./VQA/dockerfile
@@ -52,6 +52,11 @@ services:
         condition: service_healthy
     networks:
       - ict3102_default
+    volumes: # Add this to mount the persistent volume to your container
+      - .${imagedb_RELATIVE_LOCAL_PATH}:${imagedb_RELATIVE_CONTAINER_PATH}
+    environment: # use os.environ.get("imagedb_RELATIVE_CONTAINER_PATH") in python to retrieve the imagedb URL
+      - imagedb_RELATIVE_CONTAINER_PATH=${imagedb_RELATIVE_CONTAINER_PATH}
+
   questgen:
     build:
       dockerfile: ./questGen/dockerfile
@@ -64,6 +69,7 @@ services:
         condition: service_healthy
     networks:
       - ict3102_default
+
   db:
     container_name: db
     hostname: db

@@ -37,9 +37,11 @@ class ImageSQL:
         """
         try:
             result = self.session.query(self.Image.ID, self.Image.name, self.Image.image_url, self.Image.caption).all()
+            self.session.commit()
             return result
         except Exception as e:
-            self.session.rollback()        
+            print(e)
+            return False
 
     def doesImageNameExist(self, name):
         """
@@ -48,9 +50,11 @@ class ImageSQL:
         """
         try:
             result = self.session.query(self.Image.name).filter(self.Image.name == name).count()
+            self.session.commit()
             return result
         except Exception as e:
-            self.session.rollback()
+            print(e)
+            return False
 
     def insertImage(self, name, image_url):
         """
@@ -63,8 +67,8 @@ class ImageSQL:
                 self.Image.name == name).one()
             return result
         except Exception as e:
-            self.session.rollback()
-
+            print(e)
+            return False
 
     def getImageID(self, name):
         """
@@ -73,9 +77,11 @@ class ImageSQL:
         try:
             result = self.session.query(self.Image.ID).filter(
                 self.Image.name == name).one()
+            self.session.commit()
             return result
         except Exception as e:
-            self.session.rollback()
+            print(e)
+            return False
 
     def findById(self, ID):
         """
@@ -84,9 +90,11 @@ class ImageSQL:
         try:
             result = self.session.query(self.Image.name, self.Image.image_url, self.Image.caption).filter(
                 self.Image.ID == ID).one()
+            self.session.commit()
             return result
         except Exception as e:
-            self.session.rollback()
+            print(e)
+            return False
 
     def updateImageURL(self, ID, new_URL):
         try:
@@ -94,12 +102,19 @@ class ImageSQL:
             retrievedImage = self.session.scalars(statement).one()
             retrievedImage.image_url = new_URL
             self.session.commit()
+            return True
         except Exception as e:
             print(e)
+            return False
 
     def deleteImageById(self, ID):
-        statement = self.session.query(self.Image).filter(self.Image.ID == ID).delete()
-        self.session.commit()
+        try:
+            statement = self.session.query(self.Image).filter(self.Image.ID == ID).delete()
+            self.session.commit()
+            return True
+        except Exception as e:
+            print(e)
+            return False
 
     def updatecaption(self, ID, newcaption):
         try:
@@ -107,9 +122,11 @@ class ImageSQL:
             retrievedcaption = self.session.scalars(statement).one()
             retrievedcaption.caption = newcaption
             self.session.commit()
+            return True
         except Exception as e:
             self.session.rollback()
             print(e)
+            return False
 
 
 class QuestionAnsSQL:
@@ -137,11 +154,11 @@ class QuestionAnsSQL:
             result = self.session.query(self.QuestionAnswer.questionID, self.QuestionAnswer.question,
                                         self.QuestionAnswer.answer).filter(
                 self.QuestionAnswer.ID == ID).all()
+            self.session.commit()
             return result
         except Exception as e:
-            self.session.rollback()
-            return e
-
+            print(e)
+            return False
 
     def updateQuestions(self, QuestionID, NewQuestion):
         """
@@ -153,8 +170,8 @@ class QuestionAnsSQL:
             retrievedImage.question = NewQuestion
             self.session.commit()
         except Exception as e:
-            self.session.rollback()
-            return e
+            print(e)
+            return False
 
     def updateAnswers(self, QuestionID, NewAnswer):
         """
@@ -166,8 +183,8 @@ class QuestionAnsSQL:
             retrievedImage.answer = NewAnswer
             self.session.commit()
         except Exception as e:
-            self.session.rollback()
-            return e
+            print(e)
+            return False
 
     def delete_QuestionAnswer(self, QuestionID):
         """
@@ -177,9 +194,10 @@ class QuestionAnsSQL:
             statement = self.session.query(self.QuestionAnswer).filter(
                 self.QuestionAnswer.questionID == QuestionID).delete()
             self.session.commit()
+            return True
         except Exception as e:
-            self.session.rollback()
-            return e
+            print(e)
+            return False
 
     def insertQuestion(self, ID, Question):
         """
@@ -193,6 +211,5 @@ class QuestionAnsSQL:
                 .one()
             return result
         except Exception as e:
-            self.session.rollback()
-            return e
-
+            print(e)
+            return False

@@ -25,6 +25,8 @@ services:
         condition: service_started
       vqa:
         condition: service_started
+      questgen:
+        condition: service_started
       rabbitmq:
         condition: service_healthy
     links:

@@ -1,26 +1,30 @@
-# POTATO@3102.com
+# Test Data and Scripts
+This directory contains the datasets and items used for the testing of the QuestGen docker container
 
-## Test Data and Scripts
+# Important Notice
+The files used to simulate the DockerSwarm scenario are found within the **questGen** folder.
+<br>Kindly refer to the _README.md_ within the **questGen** folder for more information. 
 
-This directory contains the datasets and items used for the testing of the docker container
+## Question Generation Testing Guide
 
-### Caption Generation Testing Guide
-
-X) Run **common_testing_script.py** and use the '_CaptionGen_' queue
-
-### Question Generation Testing Guide
-
-#### Prerequisites:
+### Prerequisites:
 
 1) Ensure all containers are running
 2) Import **amazon_cells_labelled.csv** into the database, '_db_'
     1) Import according to names: Eg. caption csv into caption column
 3) Run **common_testing_script.py** and use the '_QuestGen_' queue
 
-#### Limitations:
+### Limitations:
 
-- **RANGE FOR RANDOMISATION** Must be 1000 or lesser
+- **QUEUE ITEMS COUNT** Must be 1000 or lesser
 
-### Answer Generation Testing Guide
+## Getting Results
+1) Enter the '_questgen_'container and execute the **collation.py**
+   1) Command Example:
+      1) python collation.py
 
-X) Run **common_testing_script.py** and use the '_AnswerGen_' queue
+## How to Interpret results
+It will return the following:
+- Total Number of Captions Evaluated
+- Total Number of Questions Generated
+- Average Number of Questions Generated based on Characters of Caption

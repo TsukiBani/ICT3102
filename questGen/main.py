@@ -1,6 +1,10 @@
+import cProfile
+import io
+import os
+import pstats
+
 from pipelines import pipeline
 import pika
-import json
 from sqlalchemy_orm import ImageSQL, QuestionAnsSQL
 
 
@@ -15,9 +19,6 @@ class QuestionGen:
         """
         return self.nlp(text)
 
-
-# while True:
-#     {}
 
 # Connection for Question Generator (Listen)
 connection = pika.BlockingConnection(pika.ConnectionParameters(host="rabbitmq", heartbeat=600,
@@ -61,8 +62,28 @@ def callback(ch, method, properties, body):
         ID = ID.replace("test", "")
         # Retrieve the caption
         caption = IMG_control.findById(ID)[2]
+
         # Generate Questions
+        numberofCharacters = len(caption)
+        pr = cProfile.Profile()
+        pr.enable()
         result = QG.processText(caption)
+        pr.disable()
+        s = io.StringIO()
+        ps = pstats.Stats(pr, stream=s)
+        ps.strip_dirs()  # Remove directory path
+        ps.sort_stats('tottime')
+        ps.print_stats()
+
+        if not os.path.exists("./TestResults/"):
+            os.makedirs("./TestResults/")
+
+        filename = "./TestResults/test_" + ID + ".txt"
+        with open(filename, 'w+') as f:
+            f.write("Number of characters: " + str(numberofCharacters) +
+                    "\nNumber of Questions Generated: " + str(len(result)) +
+                    "\n" + s.getvalue())
+
         for question in result:
             # print("Question: " + question)
             print("Completed" + ID)

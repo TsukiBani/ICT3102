@@ -54,8 +54,7 @@ def reviewimage():
     if ID:
         if image and qnuestionsql:
             if request.method == "POST":
-                return redirect(url_for("views.home"))
-            return render_template(
+                return render_template(
                 "reviewimage.html", img_name=image[0], img_caption=image[2], qna=qnuestionsql
             )
         else:

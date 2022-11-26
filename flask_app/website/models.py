@@ -176,6 +176,7 @@ class QuestionAnsSQL:
             retrievedImage = self.session.scalars(statement).one()
             retrievedImage.question = NewQuestion
             self.session.commit()
+            return True
         except Exception as e:
             self.session.rollback()
             print(e)
@@ -190,6 +191,7 @@ class QuestionAnsSQL:
             retrievedImage = self.session.scalars(statement).one()
             retrievedImage.answer = NewAnswer
             self.session.commit()
+            return True
         except Exception as e:
             self.session.rollback()
             print(e)

@@ -35,10 +35,7 @@ def home():
     if request.method == "POST":
         nameOfImage = request.values.get('image_name')
         imageUrl = os.environ.get("imagedb_RELATIVE_CONTAINER_PATH") + '/P1000654.JPG'
-        if imageSQL.doesImageNameExist(nameOfImage) == 1:
-            # TODO How to reject duplicates?
-            return render_template("index.html")
-        else:
+        if imageSQL.doesImageNameExist(nameOfImage) != 1:
             imageID = imageSQL.insertImage(name=nameOfImage, image_url=imageUrl)
             captionGen(str(imageID[0]))
             session['id'] = imageID[0]
@@ -75,7 +72,7 @@ def updatecaption():
                     flash("Caption updated unsuccessfully")
             else:
                 flash("Image not found")
-    return render_template("reviewimage.html", img_name=image[0], img_caption=image[2])
+    return redirect(url_for("views.reviewimage"))
 
 
 @views.route("/searchimage", methods=["GET", "POST"])

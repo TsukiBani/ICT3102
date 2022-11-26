@@ -93,7 +93,7 @@ def viewimage():
         return render_template("searchimage.html", results=results)
     else:
         flash("Images not found")
-        return redirect(url_for("views.home"))
+        return redirect(url_for("views.home")), {"id": session["id"]}
 
 
 @views.route("/editqna", methods=["GET", "POST"])

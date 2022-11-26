@@ -9,6 +9,8 @@ from models import ImageSQL, QuestionAnsSQL
 from PIL import Image
 from torchvision import transforms
 from torchvision.transforms import InterpolationMode
+import cProfile, pstats, io
+from pstats import SortKey
 # import requests
 
 
@@ -78,19 +80,33 @@ def VQA():
         image_file = load_demo_image(image_url, image_size, device)
         # image_url = load_demo_image(image_size=image_size, device=device)
 
-        model_url = 'https://storage.googleapis.com/sfr-vision-language-research/BLIP/models/model_base_capfilt_large.pth'
+        model_url = '/app/VQA/model_base_capfilt_large.pth'
 
         model = blip_decoder(pretrained=model_url, image_size=image_size, vit='base')
         model.eval()
         model = model.to(device)
+
+        print("Profile caption")
+
+        pr = cProfile.Profile()
+        pr.enable()
+
         with torch.no_grad():
             # beam search
-            caption = model.generate(image_file, sample=False, num_beams=3, max_length=20, min_length=5)
+            # caption = model.generate(image_file, sample=False, num_beams=3, max_length=20, min_length=5)
             # nucleus sampling
-            # caption = model.generate(image, sample=True, top_p=0.9, max_length=20, min_length=5)
+            caption = model.generate(image_file, sample=True, top_p=0.9, max_length=20, min_length=5)
             result = IMG_control.updatecaption(ID, caption[0])
             captionGen(str(result[0]))
             print('caption: ' + caption[0])
+
+        pr.disable()
+        s = io.StringIO()
+        sortby = SortKey.CUMULATIVE
+        ps = pstats.Stats(pr, stream=s).sort_stats('tottime')
+        ps.print_stats(10)
+        print(s.getvalue())
+
 
     # ch, method, properties, body
     def answer_callback(ch, method, properties, body):
@@ -98,10 +114,11 @@ def VQA():
         ID = int(body.decode())
         QA = QA_control.getDataByQuestionID(ID)
         image = IMG_control.findById(QA[0][0])
+
         image_url = image[1]
         image_file = load_demo_image(image_url, image_size, device)
 
-        model_url = 'https://storage.googleapis.com/sfr-vision-language-research/BLIP/models/model_base_vqa_capfilt_large.pth'
+        model_url = '/app/VQA/model_base_vqa_capfilt_large.pth'
 
         model = blip_vqa(pretrained=model_url, image_size=image_size, vit='base')
         model.eval()
@@ -113,11 +130,23 @@ def VQA():
         question = QA[0][1]
             # question = 'where is the woman sitting?'
 
+        print("Profile answer")
+
+        pr = cProfile.Profile()
+        pr.enable()
+
         with torch.no_grad():
             answer = model(image_file, question, train=False, inference='generate')
-            QA_control.updateAnswers(QA[0][0], answer[0])
+            QA_control.updateAnswers(ID, answer[0])
             # answerGen(str(ID))
             print('answer: ' + answer[0])
+
+        pr.disable()
+        s = io.StringIO()
+        sortby = SortKey.CUMULATIVE
+        ps = pstats.Stats(pr, stream=s).sort_stats('tottime')
+        ps.print_stats(10)
+        print(s.getvalue())
 
     channel.basic_qos(prefetch_count=2)
     channel.basic_consume(queue='CaptionGen', on_message_callback=caption_callback)

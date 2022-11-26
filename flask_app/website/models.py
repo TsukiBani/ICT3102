@@ -40,6 +40,7 @@ class ImageSQL:
             self.session.commit()
             return result
         except Exception as e:
+            self.session.rollback()
             print(e)
             return False
 
@@ -67,6 +68,7 @@ class ImageSQL:
                 self.Image.name == name).one()
             return result
         except Exception as e:
+            self.session.rollback()
             print(e)
             return False
 
@@ -80,6 +82,7 @@ class ImageSQL:
             self.session.commit()
             return result
         except Exception as e:
+            self.session.rollback()
             print(e)
             return False
 
@@ -93,6 +96,7 @@ class ImageSQL:
             self.session.commit()
             return result
         except Exception as e:
+            self.session.rollback()
             print(e)
             return False
 
@@ -104,6 +108,7 @@ class ImageSQL:
             self.session.commit()
             return True
         except Exception as e:
+            self.session.rollback()
             print(e)
             return False
 
@@ -113,6 +118,7 @@ class ImageSQL:
             self.session.commit()
             return True
         except Exception as e:
+            self.session.rollback()
             print(e)
             return False
 
@@ -157,6 +163,7 @@ class QuestionAnsSQL:
             self.session.commit()
             return result
         except Exception as e:
+            self.session.rollback()
             print(e)
             return False
 
@@ -170,6 +177,7 @@ class QuestionAnsSQL:
             retrievedImage.question = NewQuestion
             self.session.commit()
         except Exception as e:
+            self.session.rollback()
             print(e)
             return False
 
@@ -183,6 +191,7 @@ class QuestionAnsSQL:
             retrievedImage.answer = NewAnswer
             self.session.commit()
         except Exception as e:
+            self.session.rollback()
             print(e)
             return False
 
@@ -196,6 +205,7 @@ class QuestionAnsSQL:
             self.session.commit()
             return True
         except Exception as e:
+            self.session.rollback()
             print(e)
             return False
 
@@ -211,5 +221,6 @@ class QuestionAnsSQL:
                 .one()
             return result
         except Exception as e:
+            self.session.rollback()
             print(e)
             return False

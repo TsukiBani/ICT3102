@@ -49,17 +49,12 @@ def home():
 @views.route("/reviewimage", methods=["GET", "POST"])
 def reviewimage():
     ID = session["id"]
-    image = imageSQL.findById(ID)
-    qnuestionsql = questionansSQL.getDataByID(ID)
     if ID:
-        if image and qnuestionsql:
-            if request.method == "POST":
-                return render_template(
-                "reviewimage.html", img_name=image[0], img_caption=image[2], qna=qnuestionsql
-            )
-        else:
-            flash("Insert not yet complete found, please wait for a while before refresh")
-            return render_template("reviewimage.html")
+        image = imageSQL.findById(ID)
+        qnuestionsql = questionansSQL.getDataByID(ID)
+        if not image and not qnuestionsql:
+            flash("Insert not yet complete, please wait for a while before refreshing")
+        return render_template("reviewimage.html", img_name=image[0], img_caption=image[2], qna=qnuestionsql)
     else:
         flash("No image or question not found")
         return redirect(url_for("views.home"))
@@ -68,19 +63,19 @@ def reviewimage():
 @views.route("/editcaption", methods=["POST"])
 def updatecaption():
     ID = session["id"]
-    image = imageSQL.findById(ID)
-    if image:
+    if ID:
+        image = imageSQL.findById(ID)
         if request.method == "POST":
-            newcaptiondata = request.form["updatedvalue"]
-            update = imageSQL.updatecaption(ID, newcaptiondata)
-            if update:
-                flash("Caption updated successfully")
+            if image:
+                newcaptiondata = request.form["updatedvalue"]
+                update = imageSQL.updatecaption(ID, newcaptiondata)
+                if update:
+                    flash("Caption updated successfully")
+                else:
+                    flash("Caption updated unsuccessfully")
             else:
-                flash("Caption updated unsuccessfully")
-        return render_template("reviewimage.html", img_name=image[0], img_caption=image[2])
-    else:
-        flash("Image not found")
-        return redirect(url_for("views.home"))
+                flash("Image not found")
+    return render_template("reviewimage.html", img_name=image[0], img_caption=image[2])
 
 
 @views.route("/searchimage", methods=["GET", "POST"])
@@ -93,7 +88,7 @@ def viewimage():
         return render_template("searchimage.html", results=results)
     else:
         flash("Images not found")
-        return redirect(url_for("views.home")), {"id": session["id"]}
+        return redirect(url_for("views.home"))
 
 
 @views.route("/editqna", methods=["GET", "POST"])
@@ -108,4 +103,4 @@ def editqna():
             flash("Question or answer not updated successfully")
         else:
             flash("Question or answer updated successfully")
-        return redirect(url_for("views.reviewimage"))
+    return redirect(url_for("views.reviewimage"))

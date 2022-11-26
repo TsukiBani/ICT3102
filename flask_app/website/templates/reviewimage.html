@@ -3,18 +3,20 @@
     <h1>Review Image</h1>
     {% with messages = get_flashed_messages() %} {% if messages %} {% for
     message in messages %}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="alert"
-                aria-label="Close"
-        ></button>
-        {{ message }}
-    </div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"
+            ></button>
+            {{ message }}
+        </div>
     {% endfor %} {% endif %} {% endwith %}
     <h3>Image Name: {{ img_name }}</h3>
-    <h3>Caption: {{ img_caption }}<button class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="#editioncaption">Edit</button></h3>
+    <h3>Caption: {{ img_caption }}
+        <button class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="#editioncaption">Edit</button>
+    </h3>
     <!-- <div id="editioncaption" style="display: none;">
         <h3>Edit Caption</h3>
         <form method="post"  action="/editcaption">
@@ -24,20 +26,20 @@
         <br/>
     </div> -->
     <div id="editioncaption" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <h2>Edit Caption</h2>
-          <form method="post"  action="/editcaption">
-            <label class="form-label mt-3">Caption:</label>
-            <input type="text" name="updatedvalue"value="{{ img_caption }}"/>
-            <button class="btn btn-primary" type="submit">
-              Submit
-            </button>
-        </form>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <h2>Edit Caption</h2>
+                <form method="post" action="/editcaption">
+                    <label class="form-label mt-3">Caption:</label>
+                    <input type="text" name="updatedvalue" value="{{ img_caption }}"/>
+                    <button class="btn btn-primary" type="submit">
+                        Submit
+                    </button>
+                </form>
 
+            </div>
         </div>
-      </div>
-     </div>
+    </div>
     <div class="table-responsive">
         <table class="table table-striped table-sm table-hover table-dark text-center">
             <tbody>
@@ -46,58 +48,57 @@
                 <th><b>Answers</b></th>
                 <th></th>
             </tr>
-                {% for row in qna %}
-            <tr>
-                <div id="edit">
-                    <td><p>{{row.question}}</p></td>
-                    <td><p>{{row.answer}}</p></td>
-                </div>
+            {% for row in qna %}
+                <tr>
+                    <div id="edit">
+                        <td><p>{{ row.question }}</p></td>
+                        <td><p>{{ row.answer }}</p></td>
+                    </div>
 
-              <td>
-                <a
-                href="/reviewimage/update/{{row.questionID}}"
-                class="btn btn-danger btn-xs"
-                data-bs-toggle="modal"
-                data-bs-target="#modaledit{{row.questionID}}"
-                >Edit</a
-              >
-              <button class="btn btn-warning btn-xs">Speech</button>
-            </td>
-            </tr>
-             <!-- Modal Edit  -->
-             <div id="modaledit{{row.questionID}}" class="modal fade" role="dialog">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <h2>Edit Question and Answer</h2>
-                  <form method="post"  action="/editqna">
-                    <input
-                      type="hidden"
-                      class="form-control"
-                      name="questionID"
-                      value="{{row.questionID}}"
-                    />
-                    <label class="form-label mt-3">Question</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      name="question"
-                      value="{{row.question}}" required
-                    />
-                    <label class="form-label mt-3">Answers</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      name="answer"
-                      value="{{row.answer}}" required
-                    />
-                    <br/>
-                    <button class="btn btn-primary" type="submit">
-                      Submit
-                    </button>
-                  </form>
+                    <td>
+                        <a
+                                href="/reviewimage/update/{{ row.questionID }}"
+                                class="btn btn-danger btn-xs"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modaledit{{ row.questionID }}"
+                        >Edit</a>
+                        {#              <button class="btn btn-warning btn-xs">Speech</button>#}
+                    </td>
+                </tr>
+                <!-- Modal Edit  -->
+                <div id="modaledit{{ row.questionID }}" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <h2>Edit Question and Answer</h2>
+                            <form method="post" action="/editqna">
+                                <input
+                                        type="hidden"
+                                        class="form-control"
+                                        name="questionID"
+                                        value="{{ row.questionID }}"
+                                />
+                                <label class="form-label mt-3">Question</label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        name="question"
+                                        value="{{ row.question }}" required
+                                />
+                                <label class="form-label mt-3">Answers</label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        name="answer"
+                                        value="{{ row.answer }}" required
+                                />
+                                <br/>
+                                <button class="btn btn-primary" type="submit">
+                                    Submit
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-              </div>
-             </div>
             {% endfor %}
             </tbody>
 
@@ -106,8 +107,8 @@
     </body>
     <script>
         function myFunction() {
-          document.getElementById("editioncaption").style.display = "block";
+            document.getElementById("editioncaption").style.display = "block";
         }
-        </script>
+    </script>
 
 {% endblock %}

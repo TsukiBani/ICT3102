@@ -18,6 +18,7 @@ field. The website would allow teachers to perform the following tasks:
 
 Contains all SQL-related stuff. Main handler is the ImageSQL class
 <br>Tables are Listed Below
+
 <ol>
     <li>Image</li>
     <li>QuestionAnswer</li>
@@ -27,9 +28,14 @@ Contains all SQL-related stuff. Main handler is the ImageSQL class
 
 Contains all the Flask routes
 
+### JMeter_Test
+
+Contains the JMeter testing related files and dependencies that may be requried to run the test plan.
+
 ## RabbitMQ Implementation
 
 Queues Declared, No exchanges used
+
 <ol>
     <li>CaptionGen</li>
     <li>QuestGen</li>

@@ -17,7 +17,7 @@ rel="stylesheet"
             {{ message }}
         </div>
     {% endfor %} {% endif %} {% endwith %}
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         <div>
             <label for="image_uploads">Choose images to upload (PNG, JPG)</label>
             <br>
@@ -32,7 +32,7 @@ rel="stylesheet"
             <p>No files currently selected for upload</p>
         </div>
         <div>
-            <button type="submit">Submit</button>
+            <input type="submit"></button>
         </div>
     </form>
     </body>

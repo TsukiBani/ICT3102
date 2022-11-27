@@ -34,7 +34,14 @@ channel.queue_declare(queue="AnswerGen", durable=True)  # Request for answer gen
 def home():
     if request.method == "POST":
         nameOfImage = request.values.get('image_name')
-        imageUrl = os.environ.get("imagedb_RELATIVE_CONTAINER_PATH") + '/P1000654.JPG'
+        if 'image_uploads' not in request.files:
+            nameOfImage = 'nofile'
+        else:
+            file = request.files['image_uploads']
+        # For debugging
+        #imageUrl = os.environ.get("imagedb_RELATIVE_CONTAINER_PATH") + '/P1000654.JPG'
+        imageUrl = os.environ.get("imagedb_RELATIVE_CONTAINER_PATH") + '/' + file.filename
+        file.save(imageUrl)
         if imageSQL.doesImageNameExist(nameOfImage) != 1:
             imageID = imageSQL.insertImage(name=nameOfImage, image_url=imageUrl)
             captionGen(str(imageID[0]))

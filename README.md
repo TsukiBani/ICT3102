@@ -14,7 +14,10 @@ field. The website would allow teachers to perform the following tasks:
 
 ## Directory Layout
 
-### Website > models.py
+### db
+Folder contains the sql file used to set up the database.
+
+### flask_app > Website > models.py
 
 Contains all SQL-related stuff. Main handler is the ImageSQL class
 <br>Tables are Listed Below
@@ -24,13 +27,21 @@ Contains all SQL-related stuff. Main handler is the ImageSQL class
     <li>QuestionAnswer</li>
 </ol>
 
-### Website > views.py
+### flask_app > Website > views.py
 
 Contains all the Flask routes
+
+### imagedb
 
 ### JMeter_Test
 
 Contains the JMeter testing related files and dependencies that may be requried to run the test plan.
+
+### questGen
+
+### questGen_Test
+
+### VQA
 
 ## RabbitMQ Implementation
 
@@ -44,5 +55,6 @@ Queues Declared, No exchanges used
 
 ## Requirements
 
-All requirements can be found within the requirements.txt
+All requirements can be found within the requirements.txt.
+<br>
 RabbitMQ's Docker Image might need to be added to the docker-compose.yml

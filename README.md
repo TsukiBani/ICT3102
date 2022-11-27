@@ -1,4 +1,5 @@
 # POTATO@3102.com
+Github Link: https://github.com/TsukiBani/ICT3102
 
 ## Website for ICT3102 Project
 

@@ -15,21 +15,18 @@ field. The website would allow teachers to perform the following tasks:
 ## Directory Layout
 
 ### db
+
 Folder contains the sql file used to set up the database.
-
-### flask_app > Website > models.py
-
-Contains all SQL-related stuff. Main handler is the ImageSQL class
-<br>Tables are Listed Below
+<br>Tables initialised are as follows:
 
 <ol>
     <li>Image</li>
     <li>QuestionAnswer</li>
 </ol>
 
-### flask_app > Website > views.py
+### flask_app
 
-Contains all the Flask routes
+Contains code related to the development of the website.
 
 ### imagedb
 
@@ -39,9 +36,17 @@ Contains the JMeter testing related files and dependencies that may be requried 
 
 ### questGen
 
+Contains all the files required for implementing questGen and dockerising.
+
+Additionally contains the files used for DockerSwarm simulation.
+
 ### questGen_Test
 
+Contains the files required for the load testing of RabbitMQ using questGen.
+
 ### VQA
+
+Contains all the files required for implementing caption and answer generation.
 
 ## RabbitMQ Implementation
 

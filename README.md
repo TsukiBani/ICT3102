@@ -30,6 +30,8 @@ Contains code related to the development of the website.
 
 ### imagedb
 
+Storage folder for the user's uploaded image files.
+
 ### JMeter_Test
 
 Contains the JMeter testing related files and dependencies that may be requried to run the test plan.

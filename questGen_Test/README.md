@@ -2,7 +2,7 @@
 This directory contains the datasets and items used for the testing of the QuestGen docker container
 
 # Important Notice
-The files used to simulate the DockerSwarm scenario are found within the **questGen** folder.
+The files used to simulate the DOCKER SWARM scenario are found within the **questGen** folder.
 <br>Kindly refer to the _README.md_ within the **questGen** folder for more information. 
 
 ## Question Generation Testing Guide

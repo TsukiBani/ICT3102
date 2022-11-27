@@ -2,7 +2,7 @@
 This folder contains all the files required to run a standalone version of QuestGen,
 or may be used to dockerize QuestGen.
 
-## DockerSwarm Testing
+## DockerSwarm Simulation Testing
 1) Create a virtual environment using **python -m venv venv**
 2) Install requirements from requirements.txt into the virtual environment
 3) Download the pre-requisite files using ""
